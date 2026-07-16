@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+
+# Next.js build output
+/.next
+/out
+*.tsbuildinfo
+
+# environment
+.env*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# the original CV lives outside the repo; the published copy is public/cv.pdf
+/CV_Pablo_Marcos_Parra_2026.pdf
