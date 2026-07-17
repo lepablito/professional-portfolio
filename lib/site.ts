@@ -5,7 +5,7 @@ export const site = {
   headline: "Applied AI Engineer building production-grade LLM systems",
   tagline:
     "AI Engineer with 4+ years taking Generative AI and LLM systems from prototype to production, focused on autonomous agents, RAG and cloud microservice architectures.",
-  url: "https://lepablito.github.io",
+  url: "https://lepablito.github.io/professional-portfolio",
   location: "Valladolid, Spain",
   email: "pablo.marcos.parra@gmail.com",
   github: "https://github.com/lepablito",

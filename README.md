@@ -1,8 +1,9 @@
-# lepablito.github.io
+# professional-portfolio
 
-Portfolio of **Pablo Marcos Parra** — Applied AI Engineer. Built with Next.js
-(App Router, TypeScript, static export) and deployed to GitHub Pages with
-GitHub Actions.
+Portfolio of **Pablo Marcos Parra** — Applied AI Engineer, served at
+[lepablito.github.io/professional-portfolio](https://lepablito.github.io/professional-portfolio/).
+Built with Next.js (App Router, TypeScript, static export) and deployed to
+GitHub Pages with GitHub Actions.
 
 ## Run locally
 
@@ -24,7 +25,7 @@ npm run typecheck  # tsc --noEmit
 Every push to `main` builds the site and publishes `out/` to GitHub Pages
 (`.github/workflows/deploy.yml`). One-time setup:
 
-1. Create the repo `lepablito/lepablito.github.io` and push this project to `main`.
+1. Create the repo `lepablito/professional-portfolio` and push this project to `main`.
 2. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
 That's it — the first push triggers the first deploy.
@@ -61,9 +62,13 @@ Notes:
 
 ## Changing the base path / domain
 
-- **User repo (current setup)** — served at the root, no basePath needed.
-- **Project repo** (e.g. `lepablito/portfolio`): set
-  `NEXT_PUBLIC_BASE_PATH=/portfolio` in `.github/workflows/deploy.yml`
-  (commented example inside) — `next.config.ts` and asset helpers pick it up.
-- **Custom domain**: change `url` in `lib/site.ts`, add a `public/CNAME` file
-  containing the domain, and configure the domain in repo Settings → Pages.
+- **Project repo (current setup)** — served under `/professional-portfolio`:
+  `NEXT_PUBLIC_BASE_PATH=/professional-portfolio` is set in
+  `.github/workflows/deploy.yml`, and `url` in `lib/site.ts` includes the
+  path. Local `npm run dev`/`preview` runs at the root (the env var is only
+  set in CI), which is fine for development.
+- **User repo** (`lepablito.github.io`): remove the `env` block from the
+  workflow and drop the path from `url` in `lib/site.ts`.
+- **Custom domain**: change `url` in `lib/site.ts` (no path), remove the
+  workflow `env` block, add a `public/CNAME` file containing the domain, and
+  configure the domain in repo Settings → Pages.

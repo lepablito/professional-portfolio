@@ -17,7 +17,7 @@ export function Footer() {
           </div>
           <div>
             <dt>Sheet</dt>
-            <dd>lepablito.github.io</dd>
+            <dd>{site.url.replace("https://", "")}</dd>
           </div>
           <div>
             <dt>Contact</dt>

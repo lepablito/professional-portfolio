@@ -35,10 +35,11 @@ jobs:
 
       - name: Build static site
         run: npm run build
-        # If this ever moves to a project repo (served under /repo-name),
-        # uncomment and adjust:
-        # env:
-        #   NEXT_PUBLIC_BASE_PATH: /portfolio
+        # Project repo: the site is served under /professional-portfolio.
+        # If this ever moves to a user repo (lepablito.github.io), remove
+        # this env block and update `url` in lib/site.ts.
+        env:
+          NEXT_PUBLIC_BASE_PATH: /professional-portfolio
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
