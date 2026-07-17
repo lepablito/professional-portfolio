@@ -45,7 +45,9 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <article>
       <header className="article-header wrap">
-        <p className="eyebrow">Case study</p>
+        <p className="eyebrow">
+          <span className="eyebrow-mark">fig.</span>Case study
+        </p>
         <h1 className="display article-title">{data.title}</h1>
         <p className="lede hero-tagline">{data.summary}</p>
         <div className="article-meta">

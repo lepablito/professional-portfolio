@@ -21,7 +21,9 @@ export default function BlogPage() {
   return (
     <>
       <header className="article-header wrap">
-        <p className="eyebrow rise">Blog</p>
+        <p className="eyebrow rise">
+          <span className="eyebrow-mark">§</span>Blog
+        </p>
         <h1 className="display rise rise-2">Notes from production.</h1>
         <p className="lede hero-tagline rise rise-3">
           Write-ups on LLM systems, agents and the unglamorous work that makes them reliable.

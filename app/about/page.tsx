@@ -106,7 +106,9 @@ export default function AboutPage() {
   return (
     <>
       <header className="article-header wrap">
-        <p className="eyebrow rise">About</p>
+        <p className="eyebrow rise">
+          <span className="eyebrow-mark">§</span>About
+        </p>
         <h1 className="display rise rise-2">Prototype fast, ship for real.</h1>
       </header>
 
@@ -159,7 +161,7 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="experience-heading" className="eyebrow">
-              Experience
+              <span className="eyebrow-mark">§ 01</span>Experience
             </h2>
           </div>
           <ol className="timeline">
@@ -179,7 +181,7 @@ export default function AboutPage() {
         <Reveal>
           <div className="community-band">
             <h2 id="community-heading" className="eyebrow">
-              Community
+              <span className="eyebrow-mark">§ 02</span>Community
             </h2>
             <p className="display community-title">Half of engineering is explaining it well.</p>
             <ul className="community-list">
@@ -200,7 +202,7 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="skills-heading" className="eyebrow">
-              Skills
+              <span className="eyebrow-mark">§ 03</span>Skills
             </h2>
           </div>
           <div className="skills-grid">
@@ -224,7 +226,7 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="background-heading" className="eyebrow">
-              Background
+              <span className="eyebrow-mark">§ 04</span>Background
             </h2>
           </div>
           <div className="skills-grid">

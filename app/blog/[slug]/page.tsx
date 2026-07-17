@@ -45,7 +45,9 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <article>
       <header className="article-header wrap">
-        <p className="eyebrow">Blog</p>
+        <p className="eyebrow">
+          <span className="eyebrow-mark">§</span>Blog
+        </p>
         <h1 className="display article-title">{data.title}</h1>
         <div className="article-meta">
           <time className="mono" dateTime={data.date}>

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ProjectCard } from "@/components/ProjectCard";
 import { Reveal } from "@/components/Reveal";
+import { WorkRow } from "@/components/WorkRow";
 import { getFeaturedProjects } from "@/lib/content";
 import { asset, site } from "@/lib/site";
 
@@ -35,17 +35,24 @@ export default function HomePage() {
           LLM systems
         </h1>
         <p className="lede hero-tagline rise rise-3">{site.tagline}</p>
-        <div className="hero-meta rise rise-4">
-          <span className="hero-meta-item">
-            focus: <strong>autonomous agents · RAG · cloud microservices</strong>
-          </span>
-          <span className="hero-meta-item">
-            currently: <strong>AI Team @ Grupo Santander</strong>
-          </span>
-          <span className="hero-meta-item">
-            status: <strong>open to Applied AI roles</strong>
-          </span>
-        </div>
+        <dl className="titleblock hero-titleblock rise rise-4">
+          <div>
+            <dt>Focus</dt>
+            <dd>autonomous agents · RAG · microservices</dd>
+          </div>
+          <div>
+            <dt>Currently</dt>
+            <dd>AI Team @ Grupo Santander</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>open to Applied AI roles</dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd>Valladolid, ES · 41.65° N, 4.72° W</dd>
+          </div>
+        </dl>
       </section>
 
       <section className="section" aria-labelledby="profile-heading">
@@ -53,7 +60,7 @@ export default function HomePage() {
           <Reveal>
             <div className="section-head">
               <h2 id="profile-heading" className="eyebrow">
-                Profile
+                <span className="eyebrow-mark">§ 01</span>Profile
               </h2>
               <Link href="/about" className="link-more">
                 More about me →
@@ -76,17 +83,17 @@ export default function HomePage() {
           <Reveal>
             <div className="section-head">
               <h2 id="projects-heading" className="eyebrow">
-                Selected projects
+                <span className="eyebrow-mark">§ 02</span>Selected work
               </h2>
               <Link href="/projects" className="link-more">
                 All projects →
               </Link>
             </div>
-            <div className="card-grid">
-              {featured.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+            <ol className="work-index">
+              {featured.map((project, i) => (
+                <WorkRow key={project.slug} project={project} index={i} />
               ))}
-            </div>
+            </ol>
           </Reveal>
         </div>
       </section>
@@ -95,7 +102,7 @@ export default function HomePage() {
         <div className="wrap">
           <Reveal>
             <h2 id="contact-heading" className="eyebrow">
-              Contact
+              <span className="eyebrow-mark">§ 03</span>Contact
             </h2>
             <p className="display cta-title">Let&apos;s build something that ships.</p>
             <p className="lede cta-lede">
@@ -107,7 +114,7 @@ export default function HomePage() {
                 Download CV (PDF)
               </a>
               <a className="btn" href={`mailto:${site.email}`}>
-                {site.email}
+                Email me
               </a>
               <a className="btn" href={site.linkedin} target="_blank" rel="noopener noreferrer">
                 LinkedIn ↗
