@@ -25,8 +25,9 @@ https://lepablito.github.io/professional-portfolio/. Site copy is **English**.
 ## Design identity: "engineering drawing"
 
 The site reads as a technical document — this is deliberate, keep it coherent:
-graph-paper background, title-block cells (`.titleblock`: hero spec table and
-footer "drawn by / checked by: production"), numbered spec sections
+graph-paper background, title-block cells (`.titleblock`: the hero spec
+table — the footer is deliberately a plain contact row, Pablo found the
+drawing-style footer confusing), numbered spec sections
 (`§ 01`, `fig.`), projects as an indexed figure list (`WorkRow`), zero border
 radius, square uppercase mono chips. Fraunces (display, variable + opsz — the
 ~67 KB font file is an accepted trade-off, see comment in `app/layout.tsx`) /
