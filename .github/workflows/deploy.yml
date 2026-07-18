@@ -45,16 +45,15 @@ jobs:
 
       - name: Build static site
         run: npm run build
-        # Project repo: the site is served under /professional-portfolio.
-        # If this ever moves to a user repo (lepablito.github.io), remove
-        # this env block and update `url` in lib/site.ts.
-        env:
-          NEXT_PUBLIC_BASE_PATH: /professional-portfolio
+        # base path lives in astro.config.mjs — no env var needed.
+
+      - name: Check internal links carry the base path
+        run: npm run check-links
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     needs: build

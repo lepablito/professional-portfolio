@@ -1,0 +1,57 @@
+---
+// Which icon is visible is driven purely by CSS on [data-theme]; the
+// script below owns the toggle behavior and the aria-pressed state.
+---
+
+<button type="button" class="theme-toggle" aria-pressed="false" aria-label="Dark theme">
+  <svg
+    class="icon-moon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+  <svg
+    class="icon-sun"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path
+      d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+    ></path>
+  </svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+  if (button) {
+    const sync = () => button.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+    sync();
+    button.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        // localStorage unavailable (private mode) — theme still toggles for the session
+      }
+      sync();
+    });
+  }
+</script>

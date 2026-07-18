@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://lepablito.github.io/professional-portfolio/sitemap.xml

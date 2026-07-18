@@ -1,0 +1,57 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getPosts } from "@/lib/content";
+import { formatDate, readingTime } from "@/lib/format";
+import { withBase } from "@/lib/site";
+
+const posts = await getPosts();
+const description =
+  "Technical notes on building LLM systems: agents, RAG, evaluation and the road from prototype to production.";
+---
+
+<Base title="Blog" description={description}>
+  <header class="article-header wrap">
+    <p class="eyebrow rise">
+      <span class="eyebrow-mark" aria-hidden="true">§</span>
+      Blog
+    </p>
+    <h1 class="display rise rise-2">Notes from production.</h1>
+    <p class="lede hero-tagline rise rise-3">
+      Write-ups on LLM systems, agents and the unglamorous work that makes them reliable.
+    </p>
+  </header>
+
+  <section class="section wrap" aria-label="All posts">
+    <div class="reveal">
+      {
+        posts.length > 0 ? (
+          <ol class="post-list">
+            {posts.map((post) => (
+              <li class="post-row">
+                <time class="mono" datetime={post.data.date}>
+                  {formatDate(post.data.date)}
+                </time>
+                <div>
+                  <h2 class="post-row-title">
+                    <a href={withBase(`/blog/${post.id}/`)}>{post.data.title}</a>
+                  </h2>
+                  <p class="post-row-desc">{post.data.description}</p>
+                </div>
+                <div class="post-row-meta">
+                  <span class="mono">{readingTime(post.body ?? "")} min read</span>
+                  <ul class="tag-row" aria-label="Tags">
+                    {post.data.tags.map((tag) => (
+                      <li class="tag">{tag}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="lede">The first post is in the works — check back soon.</p>
+        )
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from "@/layouts/Base.astro";
+import { withBase } from "@/lib/site";
+---
+
+<Base title="Not found">
+  <section class="hero wrap">
+    <p class="eyebrow">
+      <span class="eyebrow-mark" aria-hidden="true">§ 404</span>
+      Not found
+    </p>
+    <h1 class="display page-title">This page doesn't exist.</h1>
+    <p class="lede hero-tagline">The link may be old, or the page may have moved.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href={withBase("/")}>Back to home</a>
+      <a class="btn" href={withBase("/projects/")}>Browse projects</a>
+    </div>
+  </section>
+</Base>

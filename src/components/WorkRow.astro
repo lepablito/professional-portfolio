@@ -1,0 +1,47 @@
+---
+import type { Project } from "@/lib/content";
+import { withBase } from "@/lib/site";
+import ExternalLink from "./ExternalLink.astro";
+
+// Projects rendered as an indexed list of figures, like a document's
+// table of contents. `headingLevel` adapts to context: h3 under the
+// home's "Selected work" h2, h2 on /projects where rows sit directly
+// under the page h1.
+interface Props {
+  project: Project;
+  index: number;
+  headingLevel?: "h2" | "h3";
+}
+
+const { project, index, headingLevel = "h3" } = Astro.props;
+const { id, data } = project;
+const Heading = headingLevel;
+---
+
+<li class="work-row">
+  <span class="work-num" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+  <div>
+    <Heading class="work-title">
+      <a href={withBase(`/projects/${id}/`)}>{data.title}</a>
+    </Heading>
+    <p class="work-summary">{data.summary}</p>
+    <p class="work-stack">{data.stack.join(" / ")}</p>
+  </div>
+  <div class="work-side">
+    {data.example && <span class="example-badge">Example content</span>}
+    {
+      data.demo && (
+        <ExternalLink class="link-ext" href={data.demo}>
+          Demo
+        </ExternalLink>
+      )
+    }
+    {
+      data.repo && (
+        <ExternalLink class="link-ext" href={data.repo}>
+          Code
+        </ExternalLink>
+      )
+    }
+  </div>
+</li>

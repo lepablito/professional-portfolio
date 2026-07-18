@@ -1,10 +1,9 @@
 # dependencies
 /node_modules
 
-# Next.js build output
-/.next
-/out
-*.tsbuildinfo
+# Astro build output
+/dist
+/.astro
 
 # environment
 .env*

@@ -1,0 +1,12 @@
+---
+// Single place that owns target="_blank" + rel, so a new external link
+// can't forget the noopener/noreferrer pair (reverse-tabnabbing guard).
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a href={href} class={className} target="_blank" rel="noopener noreferrer"><slot /></a>

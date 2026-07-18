@@ -2,24 +2,25 @@
 
 Portfolio of **Pablo Marcos Parra** — Applied AI Engineer, served at
 [lepablito.github.io/professional-portfolio](https://lepablito.github.io/professional-portfolio/).
-Built with Next.js (App Router, TypeScript, static export) and deployed to
-GitHub Pages with GitHub Actions.
+Built with Astro 5 (static, zero client framework) and deployed to GitHub
+Pages with GitHub Actions.
 
 ## Run locally
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev        # http://localhost:4321/professional-portfolio/
 ```
 
 Other scripts:
 
 ```bash
-npm run build      # static export → out/
-npm run preview    # serve out/ locally (run build first)
-npm run typecheck  # tsc --noEmit
-npm run lint       # eslint (next/core-web-vitals)
-npm test           # vitest — validates lib/content.ts and the real content/ files
+npm run build        # static build → dist/
+npm run preview      # serve dist/ locally (run build first)
+npm run typecheck    # astro check
+npm run lint         # eslint (typescript + astro plugins)
+npm test             # vitest — schemas, helpers, and the real content/ files
+npm run check-links  # fails if an internal link misses the base path
 ```
 
 Use `npm ci` (not `npm install`) when you just want to install — it respects
@@ -38,7 +39,8 @@ That's it — the first push triggers the first deploy.
 ## Content
 
 Adding a project or a blog post = adding one Markdown file. Frontmatter is
-typed in `lib/content.ts`.
+validated by the zod schemas in `src/lib/schema.ts` — a malformed file fails
+the build (and `npm test`) naming the file and field.
 
 | What | Where | Template |
 | ---- | ----- | -------- |
@@ -69,16 +71,16 @@ Notes:
 
 ## Changing the base path / domain
 
-- **Project repo (current setup)** — served under `/professional-portfolio`:
-  `NEXT_PUBLIC_BASE_PATH=/professional-portfolio` is set in
-  `.github/workflows/deploy.yml`, and `url` in `lib/site.ts` includes the
-  path. Local `npm run dev`/`preview` runs at the root (the env var is only
-  set in CI), which is fine for development.
-- **User repo** (`lepablito.github.io`): remove the `env` block from the
-  workflow and drop the path from `url` in `lib/site.ts`.
-- **Custom domain**: change `url` in `lib/site.ts` (no path), remove the
-  workflow `env` block, add a `public/CNAME` file containing the domain, and
-  configure the domain in repo Settings → Pages.
+The base path has a single source of truth: `astro.config.mjs` (`site` +
+`base`). Dev, build and CI all honor it — no env vars.
+
+- **Project repo (current setup)** — served under `/professional-portfolio`.
+- **User repo** (`lepablito.github.io`): remove `base` from
+  `astro.config.mjs` and drop the path from `url` in `src/lib/site.ts` and
+  `scripts/check-base-links.mjs`.
+- **Custom domain**: same as user repo, plus change `site`, add a
+  `public/CNAME` file with the domain, and configure it in repo Settings →
+  Pages.
 
 ## License
 
