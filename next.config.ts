@@ -1,12 +1,15 @@
 import type { NextConfig } from "next";
+import { basePath } from "./lib/site";
 
-// User repo (lepablito.github.io) → the site is served at the root, so
-// basePath stays empty. If this ever moves to a project repo (e.g.
-// "portfolio"), set NEXT_PUBLIC_BASE_PATH="/portfolio" in the deploy
-// workflow (or change the value here). A custom domain needs no change
-// here: just update `url` in lib/site.ts and add a public/CNAME file.
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
+// ACTIVE SETUP: project repo (lepablito/professional-portfolio) served at
+// https://lepablito.github.io/professional-portfolio/ — the deploy workflow
+// sets NEXT_PUBLIC_BASE_PATH=/professional-portfolio, which lib/site.ts
+// (the single source of truth for basePath) picks up here and in asset().
+// Local dev runs at the root because the env var is only set in CI.
+//
+// To move to a user repo (lepablito.github.io) or a custom domain: remove
+// the env block from .github/workflows/deploy.yml and drop the path from
+// `url` in lib/site.ts (custom domain also needs a public/CNAME file).
 const nextConfig: NextConfig = {
   output: "export",
   basePath,

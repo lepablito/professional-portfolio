@@ -3,14 +3,15 @@ import { Reveal } from "@/components/Reveal";
 import { WorkRow } from "@/components/WorkRow";
 import { getProjects } from "@/lib/content";
 
+const description =
+  "Case studies of AI systems taken to production: the problem, the architecture, the trade-offs, the metrics and the lessons.";
+
 export const metadata: Metadata = {
   title: "Projects",
-  description:
-    "Case studies of AI systems taken to production: the problem, the architecture, the trade-offs, the metrics and the lessons.",
+  description,
   openGraph: {
     title: "Projects",
-    description:
-      "Case studies of AI systems taken to production: the problem, the architecture, the trade-offs, the metrics and the lessons.",
+    description,
     url: "/projects/",
   },
 };
@@ -22,7 +23,10 @@ export default function ProjectsPage() {
     <>
       <header className="article-header wrap">
         <p className="eyebrow rise">
-          <span className="eyebrow-mark">§</span>Projects
+          <span className="eyebrow-mark" aria-hidden="true">
+            §
+          </span>
+          Projects
         </p>
         <h1 className="display rise rise-2">Case studies, not screenshots.</h1>
         <p className="lede hero-tagline rise rise-3">
@@ -37,14 +41,11 @@ export default function ProjectsPage() {
           {projects.length > 0 ? (
             <ol className="work-index">
               {projects.map((project, i) => (
-                <WorkRow key={project.slug} project={project} index={i} />
+                <WorkRow key={project.slug} project={project} index={i} headingLevel="h2" />
               ))}
             </ol>
           ) : (
-            <p className="lede">
-              No projects published yet. Add a Markdown file to <code>content/projects/</code> to
-              create the first one.
-            </p>
+            <p className="lede">New case studies are on the way — check back soon.</p>
           )}
         </Reveal>
       </section>

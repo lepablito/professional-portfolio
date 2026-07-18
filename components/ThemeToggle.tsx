@@ -1,13 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 // Which icon is visible is driven purely by CSS on [data-theme], so this
-// component renders identical markup on server and client (no hydration
-// mismatch and no flash).
+// component renders identical markup on server and client. The aria-pressed
+// state syncs after mount (the server can't know the visitor's theme), which
+// happens post-hydration and therefore causes no hydration mismatch.
 export function ThemeToggle() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.dataset.theme === "dark");
+  }, []);
+
   function toggle() {
     const root = document.documentElement;
     const next = root.dataset.theme === "dark" ? "light" : "dark";
     root.dataset.theme = next;
+    setIsDark(next === "dark");
     try {
       localStorage.setItem("theme", next);
     } catch {
@@ -16,7 +26,13 @@ export function ThemeToggle() {
   }
 
   return (
-    <button type="button" className="theme-toggle" onClick={toggle} aria-label="Toggle color theme">
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggle}
+      aria-pressed={isDark}
+      aria-label="Dark theme"
+    >
       <svg
         className="icon-moon"
         width="16"

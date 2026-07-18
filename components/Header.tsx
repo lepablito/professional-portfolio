@@ -3,6 +3,9 @@ import { site } from "@/lib/site";
 import { NavLinks } from "./NavLinks";
 import { ThemeToggle } from "./ThemeToggle";
 
+// ThemeToggle sits next to the nav, not inside it: it's a control, not a
+// navigation link, so it shouldn't be announced as part of the "Main"
+// navigation landmark.
 export function Header() {
   return (
     <header className="site-header">
@@ -10,10 +13,12 @@ export function Header() {
         <Link href="/" className="brand">
           {site.name}
         </Link>
-        <nav className="site-nav" aria-label="Main">
-          <NavLinks />
+        <div className="site-nav">
+          <nav className="site-nav-links" aria-label="Main">
+            <NavLinks />
+          </nav>
           <ThemeToggle />
-        </nav>
+        </div>
       </div>
     </header>
   );

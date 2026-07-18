@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Markdown } from "@/components/Markdown";
 import { formatDate, getProject, getProjects } from "@/lib/content";
+import { buildArticleMetadata } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -18,21 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return {
+  return buildArticleMetadata({
     title: project.data.title,
     description: project.data.summary,
-    openGraph: {
-      type: "article",
-      title: project.data.title,
-      description: project.data.summary,
-      url: `/projects/${slug}/`,
-    },
-    twitter: {
-      card: "summary",
-      title: project.data.title,
-      description: project.data.summary,
-    },
-  };
+    url: `/projects/${slug}/`,
+    publishedTime: project.data.date,
+  });
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -45,13 +38,21 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <article>
       <header className="article-header wrap">
-        <p className="eyebrow">
-          <span className="eyebrow-mark">fig.</span>Case study
+        <Link className="link-more" href="/projects/">
+          ← All projects
+        </Link>
+        <p className="eyebrow article-eyebrow">
+          <span className="eyebrow-mark" aria-hidden="true">
+            fig.
+          </span>
+          Case study
         </p>
         <h1 className="display article-title">{data.title}</h1>
         <p className="lede hero-tagline">{data.summary}</p>
         <div className="article-meta">
-          <span className="mono">{formatDate(data.date)}</span>
+          <time className="mono" dateTime={data.date}>
+            {formatDate(data.date)}
+          </time>
           <ul className="tag-row" aria-label="Tech stack">
             {data.stack.map((tech) => (
               <li key={tech} className="tag">
@@ -63,14 +64,14 @@ export default async function ProjectPage({ params }: Props) {
         {(data.demo || data.repo || data.blogPost) && (
           <div className="article-links">
             {data.demo && (
-              <a className="link-ext" href={data.demo} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="link-ext" href={data.demo}>
                 Live demo
-              </a>
+              </ExternalLink>
             )}
             {data.repo && (
-              <a className="link-ext" href={data.repo} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="link-ext" href={data.repo}>
                 Source code
-              </a>
+              </ExternalLink>
             )}
             {data.blogPost && (
               <Link className="link-more" href={`/blog/${data.blogPost}/`}>

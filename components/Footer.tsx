@@ -1,4 +1,5 @@
 import { asset, site } from "@/lib/site";
+import { ExternalLink } from "./ExternalLink";
 
 // The footer is the drawing's title block — the labelled box of record
 // that sits at the bottom of an engineering sheet.
@@ -28,13 +29,9 @@ export function Footer() {
                 CV (PDF)
               </a>
               {" · "}
-              <a href={site.github} target="_blank" rel="noopener noreferrer">
-                GitHub ↗
-              </a>
+              <ExternalLink href={site.github}>GitHub ↗</ExternalLink>
               {" · "}
-              <a href={site.linkedin} target="_blank" rel="noopener noreferrer">
-                LinkedIn ↗
-              </a>
+              <ExternalLink href={site.linkedin}>LinkedIn ↗</ExternalLink>
             </dd>
           </div>
         </dl>

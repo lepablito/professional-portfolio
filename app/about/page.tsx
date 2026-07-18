@@ -1,113 +1,32 @@
 import type { Metadata } from "next";
+import { ExternalLink } from "@/components/ExternalLink";
+import { FactList } from "@/components/FactList";
 import { Reveal } from "@/components/Reveal";
+import { certifications, community, education, experience, languages, skills } from "@/lib/about-data";
 import { asset, site } from "@/lib/site";
+
+const description =
+  "AI Engineer with 4+ years building production-ready AI systems — GenAI, LLMs and autonomous agents on GCP, Azure and AWS. Community organizer at GDG Valladolid.";
 
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "AI Engineer with 4+ years building production-ready AI systems — GenAI, LLMs and autonomous agents on GCP, Azure and AWS. Community organizer at GDG Valladolid.",
+  description,
   openGraph: {
     title: "About",
-    description:
-      "AI Engineer with 4+ years building production-ready AI systems — GenAI, LLMs and autonomous agents on GCP, Azure and AWS. Community organizer at GDG Valladolid.",
+    description,
     url: "/about/",
   },
 };
-
-const experience = [
-  {
-    role: "Analyst II · AI Team",
-    org: "Santander Consumer Finance Global Services (Grupo Santander)",
-    period: "Oct 2025 – Present",
-    description:
-      "Leading end-to-end design of automation solutions on a microservice architecture. Designing high-impact GenAI demos and PoCs for executive and technical audiences, driving internal DevRel initiatives, managing team resources and mentoring junior analysts.",
-  },
-  {
-    role: "Analyst I · AI Team & Junior Data Analyst",
-    org: "Santander Consumer Finance Global Services (Grupo Santander)",
-    period: "Sep 2023 – Sep 2025",
-    description:
-      "Developed and deployed GenAI and LLM solutions for financial use cases, including autonomous agents that automate knowledge-intensive workflows. Built data pipelines and ETLs, and developed internal Python libraries.",
-  },
-  {
-    role: "AI Researcher",
-    org: "AIR Institute",
-    period: "Feb 2022 – Aug 2023",
-    description:
-      "Research and implementation of GenAI and LLM solutions; explainable AI models, time-series forecasting and predictive maintenance; NLP algorithms for text understanding and classification.",
-  },
-];
-
-const community = [
-  {
-    role: "Google Developer Group Valladolid",
-    detail: "Organizer & speaker",
-    period: "Feb 2023 – Present",
-    description: "Running the local Google developer community: organizing meetups and giving talks on applied AI.",
-  },
-  {
-    role: "Young Programmers Club",
-    detail: "Python instructor",
-    period: "Oct 2022 – Present",
-    description: "Teaching Python to students aged 12–18 and preparing them for the Informatics Olympiad.",
-  },
-  {
-    role: "Google Developer Student Club",
-    detail: "Lead",
-    period: "2021 – 2023",
-    description: "Led the university chapter, coordinating events and workshops for student developers.",
-  },
-];
-
-const skills = [
-  {
-    group: "Generative AI & LLMs",
-    items: ["LLMs", "Prompt Engineering", "RAG", "Fine-Tuning", "Agentic AI", "Autonomous Agents", "LangChain"],
-  },
-  {
-    group: "ML & Deep Learning",
-    items: ["TensorFlow", "Keras", "PyTorch", "Scikit-learn", "Time Series", "Predictive Maintenance", "Explainable AI"],
-  },
-  {
-    group: "NLP",
-    items: ["Transformers", "Embeddings", "Text Classification", "NER"],
-  },
-  {
-    group: "Data & MLOps",
-    items: ["ETL Pipelines", "Microservices", "REST APIs", "Docker"],
-  },
-  {
-    group: "Cloud",
-    items: ["GCP (Vertex AI)", "Azure AI", "AWS"],
-  },
-  {
-    group: "Programming",
-    items: ["Python", "R", "SQL"],
-  },
-];
-
-const education = [
-  { degree: "MSc in Data Science", school: "Universitat Oberta de Catalunya (UOC)" },
-  { degree: "BEng in Computer Engineering", school: "Universidad de Valladolid" },
-  { degree: "BSc in Statistics", school: "Universidad de Valladolid" },
-];
-
-const certifications = [
-  { name: "Azure AI Fundamentals (AI-900)", issuer: "Microsoft" },
-  { name: "Introduction to Quantum Computing", issuer: "UNED" },
-];
-
-const languages = [
-  { name: "Spanish", level: "Native" },
-  { name: "English", level: "C1/C2 · Full professional proficiency" },
-];
 
 export default function AboutPage() {
   return (
     <>
       <header className="article-header wrap">
         <p className="eyebrow rise">
-          <span className="eyebrow-mark">§</span>About
+          <span className="eyebrow-mark" aria-hidden="true">
+            §
+          </span>
+          About
         </p>
         <h1 className="display rise rise-2">Prototype fast, ship for real.</h1>
       </header>
@@ -138,9 +57,9 @@ export default function AboutPage() {
                 <a className="btn btn-primary" href={asset(site.cvPath)} download>
                   Download CV (PDF)
                 </a>
-                <a className="btn" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="btn" href={site.linkedin}>
                   LinkedIn ↗
-                </a>
+                </ExternalLink>
               </div>
             </div>
             {/* TODO: replace with a real portrait at public/images/portrait.jpg
@@ -161,7 +80,10 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="experience-heading" className="eyebrow">
-              <span className="eyebrow-mark">§ 01</span>Experience
+              <span className="eyebrow-mark" aria-hidden="true">
+                § 01
+              </span>
+              Experience
             </h2>
           </div>
           <ol className="timeline">
@@ -181,7 +103,10 @@ export default function AboutPage() {
         <Reveal>
           <div className="community-band">
             <h2 id="community-heading" className="eyebrow">
-              <span className="eyebrow-mark">§ 02</span>Community
+              <span className="eyebrow-mark" aria-hidden="true">
+                § 02
+              </span>
+              Community
             </h2>
             <p className="display community-title">Half of engineering is explaining it well.</p>
             <ul className="community-list">
@@ -202,7 +127,10 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="skills-heading" className="eyebrow">
-              <span className="eyebrow-mark">§ 03</span>Skills
+              <span className="eyebrow-mark" aria-hidden="true">
+                § 03
+              </span>
+              Skills
             </h2>
           </div>
           <div className="skills-grid">
@@ -226,42 +154,24 @@ export default function AboutPage() {
         <Reveal>
           <div className="section-head">
             <h2 id="background-heading" className="eyebrow">
-              <span className="eyebrow-mark">§ 04</span>Background
+              <span className="eyebrow-mark" aria-hidden="true">
+                § 04
+              </span>
+              Background
             </h2>
           </div>
           <div className="skills-grid">
             <div className="skills-group">
               <h3>Education</h3>
-              <ul className="fact-list">
-                {education.map((entry) => (
-                  <li key={entry.degree}>
-                    <span>{entry.degree}</span>
-                    <span className="mono">{entry.school}</span>
-                  </li>
-                ))}
-              </ul>
+              <FactList facts={education} />
             </div>
             <div className="skills-group">
               <h3>Certifications</h3>
-              <ul className="fact-list">
-                {certifications.map((entry) => (
-                  <li key={entry.name}>
-                    <span>{entry.name}</span>
-                    <span className="mono">{entry.issuer}</span>
-                  </li>
-                ))}
-              </ul>
+              <FactList facts={certifications} />
             </div>
             <div className="skills-group">
               <h3>Languages</h3>
-              <ul className="fact-list">
-                {languages.map((entry) => (
-                  <li key={entry.name}>
-                    <span>{entry.name}</span>
-                    <span className="mono">{entry.level}</span>
-                  </li>
-                ))}
-              </ul>
+              <FactList facts={languages} />
             </div>
           </div>
         </Reveal>

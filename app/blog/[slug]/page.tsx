@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Markdown } from "@/components/Markdown";
 import { formatDate, getPost, getPosts } from "@/lib/content";
+import { buildArticleMetadata } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -17,22 +19,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  return {
+  return buildArticleMetadata({
     title: post.data.title,
     description: post.data.description,
-    openGraph: {
-      type: "article",
-      title: post.data.title,
-      description: post.data.description,
-      publishedTime: post.data.date,
-      url: `/blog/${slug}/`,
-    },
-    twitter: {
-      card: "summary",
-      title: post.data.title,
-      description: post.data.description,
-    },
-  };
+    url: `/blog/${slug}/`,
+    publishedTime: post.data.date,
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -45,8 +37,14 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <article>
       <header className="article-header wrap">
-        <p className="eyebrow">
-          <span className="eyebrow-mark">§</span>Blog
+        <Link className="link-more" href="/blog/">
+          ← Blog
+        </Link>
+        <p className="eyebrow article-eyebrow">
+          <span className="eyebrow-mark" aria-hidden="true">
+            §
+          </span>
+          Blog
         </p>
         <h1 className="display article-title">{data.title}</h1>
         <div className="article-meta">
@@ -62,6 +60,13 @@ export default async function BlogPostPage({ params }: Props) {
             ))}
           </ul>
         </div>
+        {data.relatedProject && (
+          <div className="article-links">
+            <Link className="link-more" href={`/projects/${data.relatedProject}/`}>
+              Related case study →
+            </Link>
+          </div>
+        )}
       </header>
 
       <div className="wrap">

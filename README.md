@@ -18,7 +18,12 @@ Other scripts:
 npm run build      # static export → out/
 npm run preview    # serve out/ locally (run build first)
 npm run typecheck  # tsc --noEmit
+npm run lint       # eslint (next/core-web-vitals)
+npm test           # vitest — validates lib/content.ts and the real content/ files
 ```
+
+Use `npm ci` (not `npm install`) when you just want to install — it respects
+the lockfile exactly, like CI does. Node ≥20 required (`.nvmrc` pins 22).
 
 ## Deploy
 
@@ -56,7 +61,9 @@ Notes:
 - **Portrait**: add `public/images/portrait.jpg` and swap the placeholder frame
   in `app/about/page.tsx` (marked with a TODO comment).
 - **Architecture diagrams**: `public/images/projects/<slug>/…`, referenced from
-  each case study's Markdown.
+  each case study's Markdown. Absolute paths (`/images/...`) get the basePath
+  automatically. Prefer preoptimized files (SVG or WebP) and, for raster
+  images, HTML `<img>` with explicit `width`/`height` to avoid layout shift.
 - **Social preview image** (optional): add `public/og.png` (1200×630) and
   uncomment the `images` line in `app/layout.tsx` metadata.
 
@@ -72,3 +79,8 @@ Notes:
 - **Custom domain**: change `url` in `lib/site.ts` (no path), remove the
   workflow `env` block, add a `public/CNAME` file containing the domain, and
   configure the domain in repo Settings → Pages.
+
+## License
+
+Code is MIT-licensed (see `LICENSE`). Written content (case studies, posts,
+bio) and the CV are © Pablo Marcos Parra, all rights reserved.

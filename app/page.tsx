@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Reveal } from "@/components/Reveal";
 import { WorkRow } from "@/components/WorkRow";
+import { currentPosition } from "@/lib/about-data";
 import { getFeaturedProjects } from "@/lib/content";
 import { asset, site } from "@/lib/site";
 
@@ -42,7 +44,7 @@ export default function HomePage() {
           </div>
           <div>
             <dt>Currently</dt>
-            <dd>AI Team @ Grupo Santander</dd>
+            <dd>{currentPosition}</dd>
           </div>
           <div>
             <dt>Status</dt>
@@ -60,7 +62,10 @@ export default function HomePage() {
           <Reveal>
             <div className="section-head">
               <h2 id="profile-heading" className="eyebrow">
-                <span className="eyebrow-mark">§ 01</span>Profile
+                <span className="eyebrow-mark" aria-hidden="true">
+                  § 01
+                </span>
+                Profile
               </h2>
               <Link href="/about" className="link-more">
                 More about me →
@@ -83,7 +88,10 @@ export default function HomePage() {
           <Reveal>
             <div className="section-head">
               <h2 id="projects-heading" className="eyebrow">
-                <span className="eyebrow-mark">§ 02</span>Selected work
+                <span className="eyebrow-mark" aria-hidden="true">
+                  § 02
+                </span>
+                Selected work
               </h2>
               <Link href="/projects" className="link-more">
                 All projects →
@@ -102,7 +110,10 @@ export default function HomePage() {
         <div className="wrap">
           <Reveal>
             <h2 id="contact-heading" className="eyebrow">
-              <span className="eyebrow-mark">§ 03</span>Contact
+              <span className="eyebrow-mark" aria-hidden="true">
+                § 03
+              </span>
+              Contact
             </h2>
             <p className="display cta-title">Let&apos;s build something that ships.</p>
             <p className="lede cta-lede">
@@ -116,12 +127,12 @@ export default function HomePage() {
               <a className="btn" href={`mailto:${site.email}`}>
                 Email me
               </a>
-              <a className="btn" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="btn" href={site.linkedin}>
                 LinkedIn ↗
-              </a>
-              <a className="btn" href={site.github} target="_blank" rel="noopener noreferrer">
+              </ExternalLink>
+              <ExternalLink className="btn" href={site.github}>
                 GitHub ↗
-              </a>
+              </ExternalLink>
             </div>
           </Reveal>
         </div>

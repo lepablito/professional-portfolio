@@ -6,6 +6,11 @@ import { Header } from "@/components/Header";
 import { site } from "@/lib/site";
 import "./globals.css";
 
+// Deliberate trade-off: Fraunces ships as a variable font with the full
+// weight range plus the optical-size axis (~67 KB woff2). The opsz axis is
+// what gives headlines their display cut — the core of the site's visual
+// identity — and next/font only allows extra axes with weight: "variable".
+// Accepted after a performance audit flagged it (LCP remains ~100 ms).
 const display = Fraunces({
   subsets: ["latin"],
   display: "swap",
@@ -64,6 +69,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <head>
+        {/* GitHub Pages can't set HTTP headers; a meta CSP is the only
+            option. 'unsafe-inline' for scripts is required by Next's own
+            inline flight/bootstrap scripts and the theme script below. */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+        />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>

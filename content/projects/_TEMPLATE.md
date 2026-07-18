@@ -22,9 +22,14 @@ draft: true
 ## Architecture
 
 <!-- TODO: drop a diagram into public/images/projects/<slug>/architecture.svg
-     and reference it like this (path already works with a basePath):
+     and reference it (absolute paths get the basePath automatically):
 
 ![Architecture diagram](/images/projects/<slug>/architecture.svg)
+
+     For raster images (PNG/WebP), use HTML with explicit dimensions to
+     avoid layout shift:
+
+<img src="/images/projects/<slug>/diagram.webp" alt="Architecture diagram" width="1200" height="675" />
 -->
 
 ## Decisions & trade-offs

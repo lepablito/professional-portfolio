@@ -3,14 +3,15 @@ import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { formatDate, getPosts } from "@/lib/content";
 
+const description =
+  "Technical notes on building LLM systems: agents, RAG, evaluation and the road from prototype to production.";
+
 export const metadata: Metadata = {
   title: "Blog",
-  description:
-    "Technical notes on building LLM systems: agents, RAG, evaluation and the road from prototype to production.",
+  description,
   openGraph: {
     title: "Blog",
-    description:
-      "Technical notes on building LLM systems: agents, RAG, evaluation and the road from prototype to production.",
+    description,
     url: "/blog/",
   },
 };
@@ -22,7 +23,10 @@ export default function BlogPage() {
     <>
       <header className="article-header wrap">
         <p className="eyebrow rise">
-          <span className="eyebrow-mark">§</span>Blog
+          <span className="eyebrow-mark" aria-hidden="true">
+            §
+          </span>
+          Blog
         </p>
         <h1 className="display rise rise-2">Notes from production.</h1>
         <p className="lede hero-tagline rise rise-3">
@@ -59,10 +63,7 @@ export default function BlogPage() {
               ))}
             </ol>
           ) : (
-            <p className="lede">
-              Nothing published yet. Add a Markdown file to <code>content/blog/</code> to write
-              the first post.
-            </p>
+            <p className="lede">The first post is in the works — check back soon.</p>
           )}
         </Reveal>
       </section>

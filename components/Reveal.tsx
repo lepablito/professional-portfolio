@@ -4,8 +4,11 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 // Subtle scroll reveal (fade + 12px slide). The hidden initial state only
 // applies when <html> has the "js" class, so content is always visible
-// without JavaScript. Reduced motion shows everything immediately.
-export function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
+// without JavaScript. A CSS-only safety animation (see .reveal in
+// globals.css) fades everything in after a delay even if hydration fails,
+// so this component can never permanently hide content. Reduced motion
+// shows everything immediately.
+export function Reveal({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,11 +37,7 @@ export function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: n
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className="reveal"
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-    >
+    <div ref={ref} className="reveal">
       {children}
     </div>
   );

@@ -5,6 +5,7 @@ title: "Post title"
 description: "One or two sentences shown in the listing and in link previews."
 date: "2026-01-01"
 tags: ["llm", "rag"]
+# relatedProject: "project-slug"   # links back to a case study
 draft: true
 ---
 
