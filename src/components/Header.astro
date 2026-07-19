@@ -1,0 +1,35 @@
+---
+import { basePath, site, withBase } from "@/lib/site";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const links = [
+  { href: "/projects/", label: "Projects" },
+  { href: "/blog/", label: "Blog" },
+  { href: "/about/", label: "About" },
+] as const;
+
+// aria-current is computed at build time per page — zero client JS,
+// unlike the previous React NavLinks component.
+const current = Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname.slice(basePath.length) || "/"
+  : Astro.url.pathname;
+const isActive = (href: string) => current === href || current.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="wrap site-header-inner">
+    <a href={withBase("/")} class="brand">{site.name}</a>
+    <div class="site-nav">
+      <nav class="site-nav-links" aria-label="Main">
+        {
+          links.map(({ href, label }) => (
+            <a href={withBase(href)} class="nav-link" aria-current={isActive(href) ? "page" : undefined}>
+              {label}
+            </a>
+          ))
+        }
+      </nav>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

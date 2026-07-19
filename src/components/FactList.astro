@@ -1,0 +1,20 @@
+---
+import type { Fact } from "@/lib/about-data";
+
+interface Props {
+  facts: readonly Fact[];
+}
+
+const { facts } = Astro.props;
+---
+
+<ul class="fact-list">
+  {
+    facts.map((fact) => (
+      <li>
+        <span>{fact.primary}</span>
+        <span class="mono">{fact.secondary}</span>
+      </li>
+    ))
+  }
+</ul>

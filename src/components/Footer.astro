@@ -1,0 +1,16 @@
+---
+import { asset, site } from "@/lib/site";
+import ExternalLink from "./ExternalLink.astro";
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer-inner">
+    <p class="mono">© {new Date().getFullYear()} {site.name} · Valladolid, Spain</p>
+    <div class="footer-links">
+      <a class="link-more" href={`mailto:${site.email}`}>Email</a>
+      <a class="link-more" href={asset(site.cvPath)} download>CV (PDF)</a>
+      <ExternalLink class="link-ext" href={site.github}>GitHub</ExternalLink>
+      <ExternalLink class="link-ext" href={site.linkedin}>LinkedIn</ExternalLink>
+    </div>
+  </div>
+</footer>

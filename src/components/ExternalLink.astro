@@ -1,0 +1,15 @@
+---
+// Single place that owns target="_blank" + rel, so a new external link
+// can't forget the noopener/noreferrer pair (reverse-tabnabbing guard)
+// or the screen-reader notice that a new tab opens (WCAG 3.2.5).
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a href={href} class={className} target="_blank" rel="noopener noreferrer"
+  ><slot /><span class="sr-only"> (opens in new tab)</span></a
+>

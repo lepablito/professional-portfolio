@@ -1,0 +1,63 @@
+---
+import { render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import { getPosts } from "@/lib/content";
+import { formatDate, readingTime } from "@/lib/format";
+import { withBase } from "@/lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const minutes = readingTime(post.body ?? "");
+const { Content } = await render(post);
+---
+
+<Base title={data.title} description={data.description} ogType="article" publishedTime={data.date}>
+  <article>
+    <header class="article-header wrap">
+      <a class="link-more" href={withBase("/blog/")}>← Blog</a>
+      <p class="eyebrow article-eyebrow">
+        <span class="eyebrow-mark" aria-hidden="true">§</span>
+        Blog
+      </p>
+      <h1 class="display article-title">{data.title}</h1>
+      <div class="article-meta">
+        <time class="mono" datetime={data.date}>{formatDate(data.date)}</time>
+        <span class="mono">{minutes} min read</span>
+        <ul class="tag-row" aria-label="Tags">
+          {data.tags.map((tag) => <li class="tag">{tag}</li>)}
+        </ul>
+      </div>
+      {
+        data.relatedProject && (
+          <div class="article-links">
+            <a class="link-more" href={withBase(`/projects/${data.relatedProject.id}/`)}>
+              Related case study →
+            </a>
+          </div>
+        )
+      }
+    </header>
+
+    <div class="wrap">
+      {
+        data.example && (
+          <p class="example-note">
+            <strong>Example content.</strong> This post is placeholder material that shows the layout — it will be
+            replaced by a real write-up.
+          </p>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>

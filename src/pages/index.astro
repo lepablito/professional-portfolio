@@ -1,0 +1,115 @@
+---
+import WorkRow from "@/components/WorkRow.astro";
+import ExternalLink from "@/components/ExternalLink.astro";
+import Base from "@/layouts/Base.astro";
+import { currentPosition } from "@/lib/about-data";
+import { getFeaturedProjects } from "@/lib/content";
+import { asset, site, withBase } from "@/lib/site";
+
+const featured = await getFeaturedProjects();
+---
+
+<Base>
+  <section class="hero wrap">
+    <p class="eyebrow hero-eyebrow rise">
+      {site.name} · {site.location}
+    </p>
+    <h1 class="display hero-title rise rise-2">
+      Applied AI Engineer building{" "}
+      <span class="marker">
+        production-grade
+        <svg class="marker-stroke" viewBox="0 0 220 12" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M3 9 C 60 3, 140 2.5, 217 7" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+          ></path>
+        </svg>
+      </span>{" "}
+      LLM systems
+    </h1>
+    <p class="lede hero-tagline rise rise-3">{site.tagline}</p>
+    <dl class="titleblock hero-titleblock rise rise-4">
+      <div>
+        <dt>Focus</dt>
+        <dd>autonomous agents · RAG · microservices</dd>
+      </div>
+      <div>
+        <dt>Currently</dt>
+        <dd>{currentPosition}</dd>
+      </div>
+      <div>
+        <dt>Status</dt>
+        <dd>open to Applied AI roles</dd>
+      </div>
+      <div>
+        <dt>Location</dt>
+        <dd>Valladolid, ES · 41.65° N, 4.72° W</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="profile-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="section-head">
+          <h2 id="profile-heading" class="eyebrow">
+            <span class="eyebrow-mark" aria-hidden="true">§ 01</span>
+            Profile
+          </h2>
+          <a href={withBase("/about/")} class="link-more">More about me →</a>
+        </div>
+        <p class="lede">
+          Pablo is an AI Engineer specialized in LLMs, autonomous agents and RAG systems, with experience building AI
+          solutions end to end — from data pipelines to microservices deployed in production. He has spent most of his
+          career in the financial sector (Grupo Santander), where he learned to build robust, scalable and secure
+          systems. Outside of work he is an active tech community organizer and speaker (Google Developer Group
+          Valladolid).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="projects-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="section-head">
+          <h2 id="projects-heading" class="eyebrow">
+            <span class="eyebrow-mark" aria-hidden="true">§ 02</span>
+            Selected work
+          </h2>
+          <a href={withBase("/projects/")} class="link-more">All projects →</a>
+        </div>
+        {
+          featured.length > 0 ? (
+            <ol class="work-index">
+              {featured.map((project, i) => (
+                <WorkRow project={project} index={i} />
+              ))}
+            </ol>
+          ) : (
+            <p class="lede">New case studies are on the way — check back soon.</p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="contact-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 03</span>
+          Contact
+        </h2>
+        <p class="display cta-title">Let's build something that ships.</p>
+        <p class="lede cta-lede">
+          The fastest way to reach me is email or LinkedIn. For the full picture, the CV has the details.
+        </p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href={asset(site.cvPath)} download>Download CV (PDF)</a>
+          <a class="btn" href={`mailto:${site.email}`}>Email me</a>
+          <ExternalLink class="btn" href={site.linkedin}>LinkedIn ↗</ExternalLink>
+          <ExternalLink class="btn" href={site.github}>GitHub ↗</ExternalLink>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

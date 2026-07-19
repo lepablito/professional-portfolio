@@ -1,0 +1,39 @@
+---
+import WorkRow from "@/components/WorkRow.astro";
+import Base from "@/layouts/Base.astro";
+import { getProjects } from "@/lib/content";
+
+const projects = await getProjects();
+const description =
+  "Case studies of AI systems taken to production: the problem, the architecture, the trade-offs, the metrics and the lessons.";
+---
+
+<Base title="Projects" description={description}>
+  <header class="article-header wrap">
+    <p class="eyebrow rise">
+      <span class="eyebrow-mark" aria-hidden="true">§</span>
+      Projects
+    </p>
+    <h1 class="display rise rise-2">Case studies, not screenshots.</h1>
+    <p class="lede hero-tagline rise rise-3">
+      Every project here follows the same structure: problem → architecture → decisions & trade-offs → metrics →
+      lessons learned. The parts that matter when a system has to survive production.
+    </p>
+  </header>
+
+  <section class="section wrap" aria-label="All projects">
+    <div class="reveal">
+      {
+        projects.length > 0 ? (
+          <ol class="work-index">
+            {projects.map((project, i) => (
+              <WorkRow project={project} index={i} headingLevel="h2" />
+            ))}
+          </ol>
+        ) : (
+          <p class="lede">New case studies are on the way — check back soon.</p>
+        )
+      }
+    </div>
+  </section>
+</Base>

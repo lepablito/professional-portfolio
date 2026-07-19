@@ -1,0 +1,75 @@
+---
+import { render } from "astro:content";
+import ExternalLink from "@/components/ExternalLink.astro";
+import Base from "@/layouts/Base.astro";
+import { getProjects } from "@/lib/content";
+import { formatDate } from "@/lib/format";
+import { withBase } from "@/lib/site";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+
+<Base title={data.title} description={data.summary} ogType="article" publishedTime={data.date}>
+  <article>
+    <header class="article-header wrap">
+      <a class="link-more" href={withBase("/projects/")}>← All projects</a>
+      <p class="eyebrow article-eyebrow">
+        <span class="eyebrow-mark" aria-hidden="true">fig.</span>
+        Case study
+      </p>
+      <h1 class="display article-title">{data.title}</h1>
+      <p class="lede hero-tagline">{data.summary}</p>
+      <div class="article-meta">
+        <time class="mono" datetime={data.date}>{formatDate(data.date)}</time>
+        <ul class="tag-row" aria-label="Tech stack">
+          {data.stack.map((tech) => <li class="tag">{tech}</li>)}
+        </ul>
+      </div>
+      {
+        (data.demo || data.repo || data.blogPost) && (
+          <div class="article-links">
+            {data.demo && (
+              <ExternalLink class="link-ext" href={data.demo}>
+                Live demo
+              </ExternalLink>
+            )}
+            {data.repo && (
+              <ExternalLink class="link-ext" href={data.repo}>
+                Source code
+              </ExternalLink>
+            )}
+            {data.blogPost && (
+              <a class="link-more" href={withBase(`/blog/${data.blogPost.id}/`)}>
+                Related blog post →
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="wrap">
+      {
+        data.example && (
+          <p class="example-note">
+            <strong>Example content.</strong> This case study is placeholder material that shows the layout — it does
+            not describe a real project yet.
+          </p>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>

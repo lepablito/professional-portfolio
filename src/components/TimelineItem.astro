@@ -1,0 +1,33 @@
+---
+// One entry of a dated list: mono period, serif title, a subtitle line and
+// a description. Shared by the Experience timeline and the Community band
+// (same shape, different class families) the way FactList covers the
+// Background columns. `variant` picks the styling hooks for each context.
+interface Props {
+  period: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  variant?: "timeline" | "community";
+}
+
+const { period, title, subtitle, description, variant = "timeline" } = Astro.props;
+---
+
+{
+  variant === "timeline" ? (
+    <li class="timeline-item">
+      <p class="mono">{period}</p>
+      <h3 class="timeline-role">{title}</h3>
+      <p class="timeline-org">{subtitle}</p>
+      <p class="timeline-desc">{description}</p>
+    </li>
+  ) : (
+    <li>
+      <p class="mono">{period}</p>
+      <h3 class="community-role">{title}</h3>
+      <p class="mono community-detail">{subtitle}</p>
+      <p class="community-desc">{description}</p>
+    </li>
+  )
+}
