@@ -2,27 +2,36 @@
 
 Portfolio of Pablo Marcos Parra (Applied AI Engineer), served at
 https://lepablito.github.io/professional-portfolio/. Site copy is **English**.
-Built with **Astro 5** (migrated from Next.js 15 in July 2026 — zero client
-framework, ~1 KB of inlined JS).
+Built with **Astro 7** (migrated from Next.js 15 in July 2026, then bumped
+5→7 — zero client framework; JS is two tiny inline vanilla scripts plus
+Astro's hover-prefetch helper).
 
 ## Commands
 
 - `npm run dev` — dev server at http://localhost:4321/professional-portfolio/
   (Astro honors `base` locally, no env var needed)
-- `npm run build` — static build to `dist/`
+- `npm run build` — static build to `dist/`, then `scripts/harden-csp.mjs`
+  replaces `'unsafe-inline'` in the meta CSP's script-src with sha256 hashes
 - `npm run lint` / `npm test` / `npm run typecheck` (`astro check`) /
-  `npm run check-links` — all run in CI before deploy
+  `npm run check-links` / `npm run test:e2e` (Playwright smoke + axe a11y
+  over the built `dist/`; needs `npm run build` first) — all run in CI
+  before deploy, and on every PR via `.github/workflows/ci.yml`
 
 ## Architecture
 
-- Astro 5 static output → GitHub Pages. `site`/`base`/`trailingSlash` live in
+- Astro 7 static output → GitHub Pages. `site`/`base`/`trailingSlash` live in
   `astro.config.mjs` — the single source of truth for the base path.
+  Markdown runs on the legacy `unified` processor (`@astrojs/markdown-remark`
+  is installed explicitly) because the custom rehype plugins need it.
 - Content = Markdown in `content/projects/` and `content/blog/` via **content
   collections** (`src/content.config.ts`, glob loader). Frontmatter is
   validated by zod schemas in `src/lib/schema.ts` (also exercised by Vitest,
-  including a gate over the real content files). Files prefixed `_` are
-  templates. Entry id = filename = URL slug.
-- `src/lib/content.ts` — sorting/filtering wrappers over `getCollection`.
+  including a gate over the real content files); the cross-collection links
+  (`blogPost`/`relatedProject`) are upgraded to typed `reference()`s in
+  `src/content.config.ts`, so a typo'd slug fails the build. Files prefixed
+  `_` are templates. Entry id = filename = URL slug.
+- `src/lib/content.ts` — thin wrappers over `getCollection`; the ordering/
+  featured-selection rules live in `src/lib/sort.ts` (pure, unit-tested).
   `src/lib/format.ts` — pure `readingTime`/`formatDate` (testable, no Astro
   imports). `src/lib/about-data.ts` — About page + home "Currently" data.
 - **Every internal href/src must go through `withBase()`** (`src/lib/site.ts`)

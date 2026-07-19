@@ -49,7 +49,7 @@ const { Content } = await render(project);
               </ExternalLink>
             )}
             {data.blogPost && (
-              <a class="link-more" href={withBase(`/blog/${data.blogPost}/`)}>
+              <a class="link-more" href={withBase(`/blog/${data.blogPost.id}/`)}>
                 Related blog post →
               </a>
             )}

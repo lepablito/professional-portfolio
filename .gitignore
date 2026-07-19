@@ -5,6 +5,10 @@
 /dist
 /.astro
 
+# Playwright artifacts
+/test-results
+/playwright-report
+
 # environment
 .env*
 

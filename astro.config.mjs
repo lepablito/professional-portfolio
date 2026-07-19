@@ -18,6 +18,9 @@ export default defineConfig({
   // export so every published URL keeps working.
   trailingSlash: "always",
   build: { format: "directory" },
+  // Hover-prefetch of internal pages. Adds one tiny framework-free script —
+  // the only client JS beyond the two inline vanilla snippets.
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   markdown: {
     // GFM is on by default. Raw HTML in .md passes through and HTML
     // comments (<!-- TODO -->) are dropped, matching the old pipeline.

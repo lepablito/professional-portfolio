@@ -1,6 +1,7 @@
 ---
 import ExternalLink from "@/components/ExternalLink.astro";
 import FactList from "@/components/FactList.astro";
+import TimelineItem from "@/components/TimelineItem.astro";
 import Base from "@/layouts/Base.astro";
 import { certifications, community, education, experience, languages, skills } from "@/lib/about-data";
 import { asset, site } from "@/lib/site";
@@ -42,15 +43,17 @@ const description =
             <ExternalLink class="btn" href={site.linkedin}>LinkedIn ↗</ExternalLink>
           </div>
         </div>
-        {/* TODO: replace with a real portrait at public/images/portrait.jpg
-            and swap this frame for:
-            <img src={asset("/images/portrait.jpg")} alt="Pablo Marcos Parra" /> */}
-        <div class="portrait-frame" aria-hidden="true">
-          <p class="mono">
-            portrait goes here
-            <br />
-            public/images/portrait.jpg
-          </p>
+        <div class="portrait-frame">
+          {/* Square source cropped to the 4:5 frame via object-fit: cover.
+              To update, overwrite public/images/portrait.jpg (≥520px wide
+              renders sharp on retina; width/height match the source file). */}
+          <img
+            src={asset("/images/portrait.jpg")}
+            alt="Portrait of Pablo Marcos Parra"
+            width="400"
+            height="400"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>
@@ -67,12 +70,7 @@ const description =
       <ol class="timeline">
         {
           experience.map((job) => (
-            <li class="timeline-item">
-              <p class="mono">{job.period}</p>
-              <h3 class="timeline-role">{job.role}</h3>
-              <p class="timeline-org">{job.org}</p>
-              <p class="timeline-desc">{job.description}</p>
-            </li>
+            <TimelineItem period={job.period} title={job.role} subtitle={job.org} description={job.description} />
           ))
         }
       </ol>
@@ -90,12 +88,13 @@ const description =
         <ul class="community-list">
           {
             community.map((entry) => (
-              <li>
-                <p class="mono">{entry.period}</p>
-                <h3 class="community-role">{entry.role}</h3>
-                <p class="mono community-detail">{entry.detail}</p>
-                <p class="community-desc">{entry.description}</p>
-              </li>
+              <TimelineItem
+                variant="community"
+                period={entry.period}
+                title={entry.role}
+                subtitle={entry.detail}
+                description={entry.description}
+              />
             ))
           }
         </ul>

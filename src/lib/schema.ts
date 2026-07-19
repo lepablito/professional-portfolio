@@ -8,13 +8,19 @@ import { z } from "astro/zod";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 const isoDate = z
-  .string({ required_error: 'missing required field "date"' })
+  .string({ message: 'missing or malformed required field "date"' })
   .regex(ISO_DATE, 'field "date" must be YYYY-MM-DD')
   .refine((d) => !Number.isNaN(new Date(`${d}T00:00:00`).getTime()), 'field "date" is not a real date');
 
-/** YAML lets authors write `stack: Python` — normalize to a string array. */
+/** YAML lets authors write `stack: Python` — normalize to a string array.
+ * Only primitives are stringified; anything else (a nested map, say) is left
+ * as-is so the z.string() check rejects it instead of it silently becoming
+ * "[object Object]". */
+const toStringIfPrimitive = (v: unknown) =>
+  typeof v === "string" || typeof v === "number" || typeof v === "boolean" ? String(v) : v;
+
 const stringArray = z.preprocess(
-  (v) => (v == null ? [] : Array.isArray(v) ? v.map(String) : [String(v)]),
+  (v) => (v == null ? [] : Array.isArray(v) ? v.map(toStringIfPrimitive) : [toStringIfPrimitive(v)]),
   z.array(z.string())
 );
 

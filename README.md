@@ -2,7 +2,7 @@
 
 Portfolio of **Pablo Marcos Parra** — Applied AI Engineer, served at
 [lepablito.github.io/professional-portfolio](https://lepablito.github.io/professional-portfolio/).
-Built with Astro 5 (static, zero client framework) and deployed to GitHub
+Built with Astro 7 (static, zero client framework) and deployed to GitHub
 Pages with GitHub Actions.
 
 ## Run locally
@@ -15,20 +15,21 @@ npm run dev        # http://localhost:4321/professional-portfolio/
 Other scripts:
 
 ```bash
-npm run build        # static build → dist/
+npm run build        # static build → dist/ (+ CSP hardening pass)
 npm run preview      # serve dist/ locally (run build first)
 npm run typecheck    # astro check
 npm run lint         # eslint (typescript + astro plugins)
 npm test             # vitest — schemas, helpers, and the real content/ files
 npm run check-links  # fails if an internal link misses the base path
+npm run test:e2e     # playwright smoke + axe accessibility scan over dist/
 ```
 
 Use `npm ci` (not `npm install`) when you just want to install — it respects
-the lockfile exactly, like CI does. Node ≥20 required (`.nvmrc` pins 22).
+the lockfile exactly, like CI does. Node ≥22 required (`.nvmrc` pins 22).
 
 ## Deploy
 
-Every push to `main` builds the site and publishes `out/` to GitHub Pages
+Every push to `main` builds the site and publishes `dist/` to GitHub Pages
 (`.github/workflows/deploy.yml`). One-time setup:
 
 1. Create the repo `lepablito/professional-portfolio` and push this project to `main`.
@@ -60,14 +61,18 @@ Notes:
 
 - **CV**: `public/cv.pdf` (linked from the home CTA, About and the footer).
   Overwrite that file to update it.
-- **Portrait**: add `public/images/portrait.jpg` and swap the placeholder frame
-  in `app/about/page.tsx` (marked with a TODO comment).
+- **Portrait**: `public/images/portrait.jpg` — overwrite that file to update
+  it. Shown in a 4:5 frame at 260px wide (`src/pages/about.astro`); any aspect
+  ratio works (`object-fit: cover` crops it), ≥520px wide renders sharp on
+  retina screens. If the source dimensions change, update the `width`/`height`
+  attributes on the `<img>`.
 - **Architecture diagrams**: `public/images/projects/<slug>/…`, referenced from
   each case study's Markdown. Absolute paths (`/images/...`) get the basePath
   automatically. Prefer preoptimized files (SVG or WebP) and, for raster
   images, HTML `<img>` with explicit `width`/`height` to avoid layout shift.
-- **Social preview image** (optional): add `public/og.png` (1200×630) and
-  uncomment the `images` line in `app/layout.tsx` metadata.
+- **Social preview image**: `public/og.png` (1200×630) is generated from the
+  site's design tokens — regenerate with `node scripts/generate-og.mjs` after
+  changing name, role or URL (the meta tags live in `src/layouts/Base.astro`).
 
 ## Changing the base path / domain
 

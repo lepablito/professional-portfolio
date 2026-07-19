@@ -38,7 +38,7 @@ const { Content } = await render(post);
       {
         data.relatedProject && (
           <div class="article-links">
-            <a class="link-more" href={withBase(`/projects/${data.relatedProject}/`)}>
+            <a class="link-more" href={withBase(`/projects/${data.relatedProject.id}/`)}>
               Related case study →
             </a>
           </div>

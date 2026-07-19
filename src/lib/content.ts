@@ -1,30 +1,24 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { compareProjects, comparePosts, pickFeatured } from "./sort";
 
 export type Project = CollectionEntry<"projects">;
 export type Post = CollectionEntry<"blog">;
 
-// Sorting/filtering mirrors the Next.js version exactly; validation now
-// happens in the collection schema (src/lib/schema.ts).
+// Thin wrappers over getCollection: drafts filtered here, frontmatter
+// validation in the collection schema (src/lib/schema.ts), ordering rules
+// in src/lib/sort.ts (pure, unit-tested).
 
 export async function getProjects(): Promise<Project[]> {
   const projects = await getCollection("projects", ({ data }) => !data.draft);
-  return projects.sort((a, b) => {
-    const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
-    const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
-    if (orderA !== orderB) return orderA - orderB;
-    return b.data.date.localeCompare(a.data.date);
-  });
+  return projects.sort((a, b) => compareProjects(a.data, b.data));
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
   const all = await getProjects();
-  const featured = all.filter((p) => p.data.featured);
-  // The home page shows up to 6 rows; if nothing is marked featured,
-  // fall back to the first projects so the section is never empty.
-  return (featured.length > 0 ? featured : all).slice(0, 6);
+  return pickFeatured(all, (p) => p.data.featured);
 }
 
 export async function getPosts(): Promise<Post[]> {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
-  return posts.sort((a, b) => b.data.date.localeCompare(a.data.date));
+  return posts.sort((a, b) => comparePosts(a.data, b.data));
 }

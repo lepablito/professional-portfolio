@@ -1,5 +1,5 @@
 ---
-import { site, withBase } from "@/lib/site";
+import { basePath, site, withBase } from "@/lib/site";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const links = [
@@ -10,9 +10,8 @@ const links = [
 
 // aria-current is computed at build time per page — zero client JS,
 // unlike the previous React NavLinks component.
-const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
-const current = Astro.url.pathname.startsWith(base)
-  ? Astro.url.pathname.slice(base.length) || "/"
+const current = Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname.slice(basePath.length) || "/"
   : Astro.url.pathname;
 const isActive = (href: string) => current === href || current.startsWith(href);
 ---

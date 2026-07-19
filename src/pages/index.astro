@@ -77,9 +77,17 @@ const featured = await getFeaturedProjects();
           </h2>
           <a href={withBase("/projects/")} class="link-more">All projects →</a>
         </div>
-        <ol class="work-index">
-          {featured.map((project, i) => <WorkRow project={project} index={i} />)}
-        </ol>
+        {
+          featured.length > 0 ? (
+            <ol class="work-index">
+              {featured.map((project, i) => (
+                <WorkRow project={project} index={i} />
+              ))}
+            </ol>
+          ) : (
+            <p class="lede">New case studies are on the way — check back soon.</p>
+          )
+        }
       </div>
     </div>
   </section>
