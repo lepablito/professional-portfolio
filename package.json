@@ -12,7 +12,7 @@
     "build": "astro build && node scripts/harden-csp.mjs",
     "preview": "astro preview",
     "typecheck": "astro check",
-    "lint": "eslint .",
+    "lint": "astro sync && eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "check-links": "node scripts/check-base-links.mjs"

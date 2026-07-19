@@ -1,3 +1,4 @@
+import { unified } from "@astrojs/markdown-remark";
 import { defineConfig } from "astro/config";
 import { rehypeBasePath, rehypePreTabIndex } from "./src/lib/rehype-plugins.mjs";
 
@@ -22,9 +23,12 @@ export default defineConfig({
   // the only client JS beyond the two inline vanilla snippets.
   prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   markdown: {
-    // GFM is on by default. Raw HTML in .md passes through and HTML
-    // comments (<!-- TODO -->) are dropped, matching the old pipeline.
-    rehypePlugins: [[rehypeBasePath, { base }], rehypePreTabIndex],
+    // Astro 7's default Markdown processor is Sätteri; our hast-walking
+    // rehype plugins need the unified pipeline (@astrojs/markdown-remark,
+    // installed explicitly). GFM is on by default. Raw HTML in .md passes
+    // through and HTML comments (<!-- TODO -->) are dropped, matching the
+    // old pipeline.
+    processor: unified({ rehypePlugins: [[rehypeBasePath, { base }], rehypePreTabIndex] }),
     // css-variables theme: code colors come from our design tokens and
     // flip automatically with light/dark (see global.css).
     shikiConfig: { theme: "css-variables" },
