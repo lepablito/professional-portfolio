@@ -2,7 +2,7 @@
 // posts live in content/. The home hero derives "currently" from here so a
 // job change is a one-file edit.
 
-export const currentPosition = "AI Team @ Grupo Santander";
+export const currentPosition = "AI Team @ Santander Consumer Finance GS (Santander Group)";
 
 export const experience = [
   {

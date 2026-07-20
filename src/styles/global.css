@@ -431,23 +431,17 @@ h1.display {
    The drawing title block: a grid of labelled cells sharing hairline
    borders. Used for the hero spec table and the footer. */
 
-/* Always an even grid (4 → 2 → 1 columns) so every row of cells is full
-   and the hairline-gap trick never exposes an empty track. */
+/* Always a grid where every row of cells is full so the hairline-gap
+   trick never exposes an empty track (3 hero cells → 3 → 1 columns). */
 .titleblock {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
 }
 
-@media (max-width: 999px) {
-  .titleblock {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 539px) {
+@media (max-width: 699px) {
   .titleblock {
     grid-template-columns: 1fr;
   }
