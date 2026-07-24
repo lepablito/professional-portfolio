@@ -39,7 +39,17 @@ test("sitemap is served and carries the base path", async ({ request, baseURL })
   expect(body).toContain("/professional-portfolio/");
 });
 
-for (const path of ["", "projects/", "blog/", "about/"]) {
+// The two case-study pages are in the list because they carry hand-drawn
+// inline SVG diagrams — the one place on the site where markup is authored
+// in Markdown rather than by a component.
+for (const path of [
+  "",
+  "projects/",
+  "blog/",
+  "about/",
+  "projects/llm-energy-benchmark/",
+  "projects/certification-exam-simulator/",
+]) {
   test(`no serious/critical axe violations on /${path}`, async ({ page }) => {
     // The site honors prefers-reduced-motion (entrance animations off).
     // Without this, axe can sample colors mid-fade and report phantom

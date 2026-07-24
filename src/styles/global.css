@@ -910,6 +910,76 @@ h1.display {
   margin-block: 1.5rem;
 }
 
+/* Architecture diagrams. Inline SVG rather than <img> so the drawing reads the
+   theme tokens below and flips with the manual theme toggle, not just with the
+   OS preference. */
+.prose .diagram {
+  margin-block: 2rem;
+  border: 1px solid var(--line);
+  padding: 1.25rem 1.25rem 0;
+  overflow-x: auto;
+}
+
+.prose .diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 460px;
+  height: auto;
+}
+
+.prose .diagram figcaption {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-meta);
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  margin-top: 1rem;
+  padding-block: 0.6rem;
+}
+
+.diagram .d-band {
+  fill: none;
+  stroke: var(--line);
+}
+
+.diagram .d-box {
+  fill: none;
+  stroke: var(--muted);
+}
+
+.diagram .d-flow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.25;
+}
+
+.diagram .d-dashed {
+  stroke-dasharray: 5 4;
+}
+
+.diagram .d-head {
+  fill: var(--accent);
+  stroke: none;
+}
+
+.diagram .d-label,
+.diagram .d-band-label,
+.diagram .d-sub {
+  font-family: var(--font-mono), monospace;
+  fill: var(--ink);
+  font-size: 10px;
+  letter-spacing: var(--track-label);
+}
+
+.diagram .d-band-label,
+.diagram .d-sub {
+  fill: var(--muted);
+}
+
+.diagram .d-sub {
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+
 .prose hr {
   border: none;
   border-top: 1px solid var(--line);
