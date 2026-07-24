@@ -33,9 +33,9 @@ pre-processing phase that runs **once** and writes its output to disk, so the
 experiment loop replays identical prompts across every repetition.
 
 <figure class="diagram" tabindex="0">
-<svg viewBox="0 0 640 528" role="img" aria-labelledby="d1-title d1-desc" preserveAspectRatio="xMidYMid meet">
+<svg viewBox="0 0 640 552" role="img" aria-labelledby="d1-title d1-desc" preserveAspectRatio="xMidYMid meet">
   <title id="d1-title">Three-phase architecture of the energy measurement harness</title>
-  <desc id="d1-desc">Pre-processing generates prompts and rubrics once with Claude Haiku and stores them as artifacts. The LangGraph experiment phase dispatches each cell to remote APIs in parallel and to local models sequentially, meters both with EcoLogits and CodeCarbon, and scores every answer with a blind rubric judge into SQLite. Post-processing runs mixed ANOVA and Wilcoxon tests over the 2,700 stored runs to produce figures and a KPI report.</desc>
+  <desc id="d1-desc">Pre-processing generates prompts and rubrics once with Claude Haiku and stores them as artifacts. The LangGraph experiment phase dispatches each cell to remote APIs in parallel and to local models sequentially, meters both with EcoLogits and CodeCarbon, and scores every answer with a blind rubric judge — Claude Haiku, with 13.3% of the runs re-scored by Claude Sonnet to validate it — into SQLite. Post-processing runs mixed ANOVA and Wilcoxon tests over the 2,700 stored runs to produce figures and a KPI report.</desc>
   <defs>
     <marker id="arw-tfm" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
       <path d="M0 0 L8 4 L0 8 z" class="d-head" />
@@ -59,7 +59,7 @@ experiment loop replays identical prompts across every repetition.
 
   <path d="M356 114 V 144" class="d-flow d-dashed" marker-end="url(#arw-tfm)" />
 
-  <rect x="8" y="152" width="624" height="232" class="d-band" />
+  <rect x="8" y="152" width="624" height="256" class="d-band" />
   <text x="20" y="172" class="d-band-label">B · EXPERIMENT — LANGGRAPH</text>
   <rect x="236" y="188" width="168" height="30" class="d-box" />
   <text x="320" y="207" class="d-label" text-anchor="middle">DISPATCHER</text>
@@ -76,24 +76,29 @@ experiment loop replays identical prompts across every repetition.
   <rect x="24" y="300" width="592" height="30" class="d-box" />
   <text x="320" y="319" class="d-label" text-anchor="middle">TELEMETRY · ECOLOGITS (API) + CODECARBON (LOCAL)</text>
   <path d="M320 330 V 344" class="d-flow" marker-end="url(#arw-tfm)" />
-  <rect x="24" y="344" width="592" height="30" class="d-box" />
-  <text x="320" y="363" class="d-label" text-anchor="middle">JUDGE · HAIKU 4.5 — BLIND, RUBRIC-SCORED</text>
+  <rect x="24" y="344" width="380" height="48" class="d-box" />
+  <text x="214" y="365" class="d-label" text-anchor="middle">JUDGE · HAIKU 4.5</text>
+  <text x="214" y="381" class="d-sub" text-anchor="middle">blind to technique · rubric-scored</text>
+  <path d="M404 368 H 428" class="d-flow" marker-end="url(#arw-tfm)" />
+  <rect x="432" y="344" width="184" height="48" class="d-box" />
+  <text x="524" y="365" class="d-label" text-anchor="middle">VALIDATION · SONNET 4.6</text>
+  <text x="524" y="381" class="d-sub" text-anchor="middle">13.3% sample · ρ 0.948</text>
 
-  <path d="M320 374 V 400" class="d-flow" marker-end="url(#arw-tfm)" />
+  <path d="M214 392 V 424" class="d-flow" marker-end="url(#arw-tfm)" />
 
-  <rect x="8" y="408" width="624" height="112" class="d-band" />
-  <text x="20" y="428" class="d-band-label">C · POST-PROCESSING</text>
-  <rect x="24" y="444" width="192" height="52" class="d-box" />
-  <text x="120" y="468" class="d-label" text-anchor="middle">SQLITE</text>
-  <text x="120" y="484" class="d-sub" text-anchor="middle">2,700 runs</text>
-  <path d="M216 470 H 244" class="d-flow" marker-end="url(#arw-tfm)" />
-  <rect x="248" y="444" width="192" height="52" class="d-box" />
-  <text x="344" y="468" class="d-label" text-anchor="middle">MIXED ANOVA</text>
-  <text x="344" y="484" class="d-sub" text-anchor="middle">wilcoxon · bonferroni</text>
-  <path d="M440 470 H 468" class="d-flow" marker-end="url(#arw-tfm)" />
-  <rect x="472" y="444" width="144" height="52" class="d-box" />
-  <text x="544" y="468" class="d-label" text-anchor="middle">FIGURES</text>
-  <text x="544" y="484" class="d-sub" text-anchor="middle">+ KPI report</text>
+  <rect x="8" y="432" width="624" height="112" class="d-band" />
+  <text x="20" y="452" class="d-band-label">C · POST-PROCESSING</text>
+  <rect x="24" y="468" width="192" height="52" class="d-box" />
+  <text x="120" y="492" class="d-label" text-anchor="middle">SQLITE</text>
+  <text x="120" y="508" class="d-sub" text-anchor="middle">2,700 runs</text>
+  <path d="M216 494 H 244" class="d-flow" marker-end="url(#arw-tfm)" />
+  <rect x="248" y="468" width="192" height="52" class="d-box" />
+  <text x="344" y="492" class="d-label" text-anchor="middle">MIXED ANOVA</text>
+  <text x="344" y="508" class="d-sub" text-anchor="middle">wilcoxon · bonferroni</text>
+  <path d="M440 494 H 468" class="d-flow" marker-end="url(#arw-tfm)" />
+  <rect x="472" y="468" width="144" height="52" class="d-box" />
+  <text x="544" y="492" class="d-label" text-anchor="middle">FIGURES</text>
+  <text x="544" y="508" class="d-sub" text-anchor="middle">+ KPI report</text>
 </svg>
 <figcaption>fig. 1 — Three-phase harness. Non-determinism lives in phase A only.</figcaption>
 </figure>
@@ -191,4 +196,4 @@ token-oriented notation is the obvious next lever.
 ## Links
 
 - Source code, artifacts and data: [github.com/lepablito/TFM_UOC_PabloMarcosParra](https://github.com/lepablito/TFM_UOC_PabloMarcosParra)
-- Full thesis (Spanish, 67 pp., PDF): [Arquitectura multiagente para la evaluación del impacto energético de LLMs](/docs/tfm-pablo-marcos-parra.pdf)
+- Full thesis (67 pp., PDF, written in Spanish): [Multi-agent architecture for measuring the energy impact of prompting techniques and context length on heterogeneous LLMs](/docs/tfm-pablo-marcos-parra.pdf)
