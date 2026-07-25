@@ -1,3 +1,16 @@
+# INERT on the current setup — kept for the custom-domain move.
+#
+# robots.txt is a per-origin file: crawlers only ever fetch /robots.txt from
+# the domain root. This is a GitHub Pages *project* site, so public/ deploys
+# under the base path and this file is published at
+# /professional-portfolio/robots.txt — a URL nothing requests. The robots.txt
+# that actually governs this origin lives in the lepablito.github.io repo,
+# which is also where the sitemap is declared.
+#
+# This file is kept because it becomes the effective robots.txt the moment the
+# site moves to a custom domain (see the migration note in astro.config.mjs);
+# at that point, drop the sitemap line from the lepablito.github.io repo.
+
 User-Agent: *
 Allow: /
 
