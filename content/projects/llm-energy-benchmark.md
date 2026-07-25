@@ -1,7 +1,7 @@
 ---
-title: "Measuring what prompting techniques actually burn"
-summary: "Prompt engineering optimizes for answer quality and ignores the energy bill — a multi-agent harness measured 2,700 LLM inferences to put a number on the trade-off."
-stack: ["Python", "LangGraph", "Anthropic API", "Ollama", "CodeCarbon", "EcoLogits", "SQLite", "statsmodels"]
+title: "Multi-agent architecture for measuring the energy consumption of LLMs based on prompting techniques and context length"
+summary: "Prompt engineering optimizes for answer quality and ignores the energy bill. This multi-agent harness measured 2,700 LLM inferences to put a number on the trade-off."
+stack: ["Python", "LangGraph", "Anthropic API", "Ollama", "CodeCarbon", "EcoLogits", "SQLite", GreenAI]
 date: "2026-06-14"
 repo: "https://github.com/lepablito/TFM_UOC_PabloMarcosParra"
 featured: true
