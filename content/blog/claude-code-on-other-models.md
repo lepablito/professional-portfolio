@@ -17,7 +17,7 @@ because they shape the entire setup.
 
 ## The two blockers
 
-**Claude Code only speaks the Anthropic Messages API.** NVIDIA NIM and Ollama
+First of all, **Claude Code only speaks the Anthropic Messages API.** NVIDIA NIM and Ollama
 both speak the OpenAI format. Nothing in Claude Code translates between them, so
 something has to sit in the middle and rewrite requests and responses on the
 wire. [LiteLLM](https://github.com/BerriAI/litellm) is the standard answer: run
