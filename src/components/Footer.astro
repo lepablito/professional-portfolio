@@ -1,16 +1,25 @@
 ---
+import type { Lang } from "@/lib/i18n";
 import { asset, site } from "@/lib/site";
+import { t } from "@/lib/strings";
 import ExternalLink from "./ExternalLink.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
 ---
 
 <footer class="site-footer">
   <div class="wrap site-footer-inner">
-    <p class="mono">© {new Date().getFullYear()} {site.name} · Valladolid, Spain</p>
+    <p class="mono">© {new Date().getFullYear()} {site.name} · {s.common.location}</p>
     <div class="footer-links">
-      <a class="link-more" href={`mailto:${site.email}`}>Email</a>
-      <a class="link-more" href={asset(site.cvPath)} download>CV (PDF)</a>
-      <ExternalLink class="link-ext" href={site.github}>GitHub</ExternalLink>
-      <ExternalLink class="link-ext" href={site.linkedin}>LinkedIn</ExternalLink>
+      <a class="link-more" href={`mailto:${site.email}`}>{s.common.email}</a>
+      <a class="link-more" href={asset(site.cvPath[lang])} download>{s.common.cvShort}</a>
+      <ExternalLink class="link-ext" lang={lang} href={site.github}>GitHub</ExternalLink>
+      <ExternalLink class="link-ext" lang={lang} href={site.linkedin}>LinkedIn</ExternalLink>
     </div>
   </div>
 </footer>

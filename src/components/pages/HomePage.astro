@@ -1,0 +1,113 @@
+---
+// Page bodies live in components so each route file is just
+// `<HomePage lang="en" />` / `<HomePage lang="es" />` — one copy of the
+// markup, two languages.
+import ExternalLink from "@/components/ExternalLink.astro";
+import WorkRow from "@/components/WorkRow.astro";
+import Base from "@/layouts/Base.astro";
+import { aboutData } from "@/lib/about-data";
+import { listFeaturedProjects } from "@/lib/content";
+import { localeHref, type Lang } from "@/lib/i18n";
+import { asset, site } from "@/lib/site";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
+const featured = await listFeaturedProjects(lang);
+---
+
+<Base lang={lang}>
+  <section class="hero wrap">
+    <p class="eyebrow hero-eyebrow rise">
+      {site.name} · {s.common.location}
+    </p>
+    <h1 class="display hero-title rise rise-2">
+      {s.home.heroBefore}{" "}
+      <span class="marker">
+        {s.home.heroMarked}
+        <svg class="marker-stroke" viewBox="0 0 220 12" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M3 9 C 60 3, 140 2.5, 217 7" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"
+          ></path>
+        </svg>
+      </span>{s.home.heroAfter && " "}{s.home.heroAfter}
+    </h1>
+    <p class="lede hero-tagline rise rise-3">{s.meta.description}</p>
+    <dl class="titleblock hero-titleblock rise rise-4">
+      <div>
+        <dt>{s.home.focus}</dt>
+        <dd>{s.home.focusValue}</dd>
+      </div>
+      <div>
+        <dt>{s.home.currently}</dt>
+        <dd>{aboutData[lang].currentPosition}</dd>
+      </div>
+      <div>
+        <dt>{s.home.location}</dt>
+        <dd>{s.common.locationShort}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="profile-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="section-head">
+          <h2 id="profile-heading" class="eyebrow">
+            <span class="eyebrow-mark" aria-hidden="true">§ 01</span>
+            {s.home.profileHeading}
+          </h2>
+          <a href={localeHref(lang, "/about/")} class="link-more">{s.home.profileMore}</a>
+        </div>
+        <p class="lede">{s.home.profileBody}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="projects-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="section-head">
+          <h2 id="projects-heading" class="eyebrow">
+            <span class="eyebrow-mark" aria-hidden="true">§ 02</span>
+            {s.home.workHeading}
+          </h2>
+          <a href={localeHref(lang, "/projects/")} class="link-more">{s.home.workMore}</a>
+        </div>
+        {
+          featured.length > 0 ? (
+            <ol class="work-index">
+              {featured.map((row, i) => (
+                <WorkRow row={row} index={i} lang={lang} />
+              ))}
+            </ol>
+          ) : (
+            <p class="lede">{s.projects.empty}</p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-heading">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="contact-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 03</span>
+          {s.home.contactHeading}
+        </h2>
+        <p class="display cta-title">{s.home.contactTitle}</p>
+        <p class="lede cta-lede">{s.home.contactLede}</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href={asset(site.cvPath[lang])} download>{s.common.downloadCv}</a>
+          <a class="btn" href={`mailto:${site.email}`}>{s.common.emailMe}</a>
+          <ExternalLink class="btn" lang={lang} href={site.linkedin}>LinkedIn ↗</ExternalLink>
+          <ExternalLink class="btn" lang={lang} href={site.github}>GitHub ↗</ExternalLink>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

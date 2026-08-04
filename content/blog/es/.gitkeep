@@ -1,0 +1,4 @@
+# Spanish posts go here: content/blog/es/<slug>.md
+# Use the same <slug> as the English file to link the two versions.
+# A post with no Spanish file is listed on /es/blog/ with an "EN" chip
+# pointing at the English URL — nothing to configure.

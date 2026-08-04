@@ -1,6 +1,7 @@
 ---
-import type { Project } from "@/lib/content";
-import { withBase } from "@/lib/site";
+import type { Listed, Project } from "@/lib/content";
+import type { Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
 import ExternalLink from "./ExternalLink.astro";
 
 // Projects rendered as an indexed list of figures, like a document's
@@ -9,14 +10,20 @@ import ExternalLink from "./ExternalLink.astro";
 // under the page h1. `index` is deliberately the row's position within
 // the current list (a figure number in that page's index), not a stable
 // project ID — the same project may be 01 on home and 03 on /projects.
+//
+// `row` carries its own href because an untranslated case study is listed in
+// Spanish but links to (and is marked as) its English original.
 interface Props {
-  project: Project;
+  row: Listed<Project>;
   index: number;
+  lang: Lang;
   headingLevel?: "h2" | "h3";
 }
 
-const { project, index, headingLevel = "h3" } = Astro.props;
-const { id, data } = project;
+const { row, index, lang, headingLevel = "h3" } = Astro.props;
+const { entry, href, fallback } = row;
+const { data } = entry;
+const s = t(lang);
 const Heading = headingLevel;
 ---
 
@@ -24,24 +31,31 @@ const Heading = headingLevel;
   <span class="work-num" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
   <div>
     <Heading class="work-title">
-      <a href={withBase(`/projects/${id}/`)}>{data.title}</a>
+      <a href={href}>{data.title}</a>
     </Heading>
     <p class="work-summary">{data.summary}</p>
     <p class="work-stack">{data.stack.join(" / ")}</p>
   </div>
   <div class="work-side">
-    {data.example && <span class="example-badge">Example content</span>}
+    {
+      fallback && (
+        <span class="lang-badge">
+          EN<span class="sr-only"> — {s.common.englishOnly}</span>
+        </span>
+      )
+    }
+    {data.example && <span class="example-badge">{s.common.exampleBadge}</span>}
     {
       data.demo && (
-        <ExternalLink class="link-ext" href={data.demo}>
-          Demo
+        <ExternalLink class="link-ext" lang={lang} href={data.demo}>
+          {s.common.demo}
         </ExternalLink>
       )
     }
     {
       data.repo && (
-        <ExternalLink class="link-ext" href={data.repo}>
-          Code
+        <ExternalLink class="link-ext" lang={lang} href={data.repo}>
+          {s.common.code}
         </ExternalLink>
       )
     }

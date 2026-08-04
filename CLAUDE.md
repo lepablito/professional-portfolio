@@ -1,7 +1,8 @@
 # professional-portfolio
 
 Portfolio of Pablo Marcos Parra (Applied AI Engineer), served at
-https://lepablito.github.io/professional-portfolio/. Site copy is **English**.
+https://lepablito.github.io/professional-portfolio/. The site is **bilingual**
+(English default at the root, Spanish under `/es/` — see below).
 Built with **Astro 7** (migrated from Next.js 15 in July 2026, then bumped
 5→7 — zero client framework; JS is two tiny inline vanilla scripts plus
 Astro's hover-prefetch helper).
@@ -23,26 +24,48 @@ Astro's hover-prefetch helper).
   `astro.config.mjs` — the single source of truth for the base path.
   Markdown runs on the legacy `unified` processor (`@astrojs/markdown-remark`
   is installed explicitly) because the custom rehype plugins need it.
-- Content = Markdown in `content/projects/` and `content/blog/` via **content
+- Content = Markdown in `content/<collection>/<lang>/` via **content
   collections** (`src/content.config.ts`, glob loader). Frontmatter is
   validated by zod schemas in `src/lib/schema.ts` (also exercised by Vitest,
   including a gate over the real content files); the cross-collection links
   (`blogPost`/`relatedProject`) are upgraded to typed `reference()`s in
   `src/content.config.ts`, so a typo'd slug fails the build. Files prefixed
-  `_` are templates. Entry id = filename = URL slug.
+  `_` are templates. Entry id = `<lang>/<slug>`; the same `<slug>` under two
+  languages is what makes them translations of each other.
 - `src/lib/content.ts` — thin wrappers over `getCollection`; the ordering/
   featured-selection rules live in `src/lib/sort.ts` (pure, unit-tested).
   `src/lib/format.ts` — pure `readingTime`/`formatDate` (testable, no Astro
-  imports). `src/lib/about-data.ts` — About page + home "Currently" data.
+  imports). `src/lib/about-data.ts` — About page + home "Currently" data,
+  one entry per language.
 - **Every internal href/src must go through `withBase()`** (`src/lib/site.ts`)
-  — Astro does not rewrite links. `scripts/check-base-links.mjs` fails CI if
-  one slips through. Markdown `src`/`href` get the base via the rehype plugin
-  in `src/lib/rehype-plugins.mjs`.
+  or `localeHref()` (`src/lib/i18n.ts`, which wraps it) — Astro does not
+  rewrite links. `scripts/check-base-links.mjs` fails CI if one slips
+  through. Markdown `src`/`href` get the base via the rehype plugin in
+  `src/lib/rehype-plugins.mjs`.
 - Interactivity is two tiny vanilla scripts (theme toggle in
   `ThemeToggle.astro`, scroll reveal in `Base.astro`) that Astro inlines.
   Nav `aria-current` is computed at build time in `Header.astro`.
 - Code blocks: Shiki with the `css-variables` theme mapped to design tokens
   in `global.css` (`--astro-code-*`) — colors flip with light/dark.
+
+## Bilingual model
+
+- English at the root (`/about/`), Spanish prefixed (`/es/about/`). The URL is
+  the only source of truth: **no auto-detection, no localStorage, no new
+  client JS** — the switcher is two `<a>` chips (`LangSwitch.astro`).
+- All UI and page copy in `src/lib/strings.ts` (`t(lang)`); the Spanish object
+  is typed against the English one so a missing key fails `astro check`, and
+  Vitest rejects empty or accidentally-untranslated values.
+- Page bodies live in `src/components/pages/*.astro` with a `lang` prop; the
+  files in `src/pages/` and `src/pages/es/` are three-line route shims. One
+  copy of the markup, two languages.
+- Untranslated articles get **no** `/es/` URL. The Spanish listing shows them
+  with an `EN` chip linking to the English page (`Listed.fallback` in
+  `src/lib/content.ts`), so there is no duplicate content and no `hreflang`
+  pointing at a page that doesn't exist. `Base.astro` takes `altHref` (null =
+  no counterpart) and `switchHref` (where the chip goes).
+- `404.astro` is the one bilingual page — GitHub Pages serves a single
+  `404.html` whatever the URL's language.
 
 ## Design identity: "engineering drawing"
 

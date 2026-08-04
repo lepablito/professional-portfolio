@@ -1,0 +1,72 @@
+---
+import Base from "@/layouts/Base.astro";
+import { entryLang, listPosts, type Listed, type Post } from "@/lib/content";
+import { formatDate, readingTime } from "@/lib/format";
+import type { Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
+const posts = await listPosts(lang);
+
+// A fallback row is an English post shown in the Spanish listing: its date
+// and reading time follow the language the post is actually written in.
+const rowLang = (row: Listed<Post>): Lang => entryLang(row.entry.id);
+---
+
+<Base lang={lang} title={s.blog.title} description={s.blog.description}>
+  <header class="article-header wrap">
+    <p class="eyebrow rise">
+      <span class="eyebrow-mark" aria-hidden="true">§</span>
+      {s.blog.eyebrow}
+    </p>
+    <h1 class="display rise rise-2">{s.blog.h1}</h1>
+    <p class="lede hero-tagline rise rise-3">{s.blog.lede}</p>
+  </header>
+
+  <section class="section wrap" aria-label={s.blog.listLabel}>
+    <div class="reveal">
+      {
+        posts.length > 0 ? (
+          <ol class="post-list">
+            {posts.map((row) => (
+              <li class="post-row">
+                <time class="mono" datetime={row.entry.data.date}>
+                  {formatDate(row.entry.data.date, lang)}
+                </time>
+                <div>
+                  <h2 class="post-row-title">
+                    <a href={row.href}>{row.entry.data.title}</a>
+                  </h2>
+                  <p class="post-row-desc">{row.entry.data.description}</p>
+                </div>
+                <div class="post-row-meta">
+                  <span class="mono">
+                    {readingTime(row.entry.body ?? "")} {s.common.minRead}
+                  </span>
+                  {row.fallback && (
+                    <span class="lang-badge">
+                      {rowLang(row).toUpperCase()}
+                      <span class="sr-only"> — {s.common.englishOnly}</span>
+                    </span>
+                  )}
+                  <ul class="tag-row" aria-label={s.a11y.tags}>
+                    {row.entry.data.tags.map((tag) => (
+                      <li class="tag">{tag}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="lede">{s.blog.empty}</p>
+        )
+      }
+    </div>
+  </section>
+</Base>

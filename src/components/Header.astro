@@ -1,35 +1,51 @@
 ---
-import { basePath, site, withBase } from "@/lib/site";
+import { localeHref, splitLocale, stripBase, type Lang } from "@/lib/i18n";
+import { site } from "@/lib/site";
+import { t } from "@/lib/strings";
+import LangSwitch from "./LangSwitch.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
-const links = [
-  { href: "/projects/", label: "Projects" },
-  { href: "/blog/", label: "Blog" },
-  { href: "/about/", label: "About" },
-] as const;
+interface Props {
+  lang: Lang;
+  /** The current page in the other language — see Base.astro. */
+  switchHref: string;
+}
 
-// aria-current is computed at build time per page — zero client JS,
-// unlike the previous React NavLinks component.
-const current = Astro.url.pathname.startsWith(basePath)
-  ? Astro.url.pathname.slice(basePath.length) || "/"
-  : Astro.url.pathname;
+const { lang, switchHref } = Astro.props;
+const s = t(lang);
+
+const links = [
+  { href: "/projects/", label: s.nav.projects },
+  { href: "/blog/", label: s.nav.blog },
+  { href: "/about/", label: s.nav.about },
+];
+
+// aria-current is computed at build time per page — zero client JS, unlike
+// the previous React NavLinks component. The language prefix comes off first
+// so /es/projects/ marks the same nav item as /projects/.
+const current = splitLocale(stripBase(Astro.url.pathname)).path;
 const isActive = (href: string) => current === href || current.startsWith(href);
 ---
 
 <header class="site-header">
   <div class="wrap site-header-inner">
-    <a href={withBase("/")} class="brand">{site.name}</a>
+    <a href={localeHref(lang, "/")} class="brand">{site.name}</a>
     <div class="site-nav">
-      <nav class="site-nav-links" aria-label="Main">
+      <nav class="site-nav-links" aria-label={s.a11y.mainNav}>
         {
           links.map(({ href, label }) => (
-            <a href={withBase(href)} class="nav-link" aria-current={isActive(href) ? "page" : undefined}>
+            <a
+              href={localeHref(lang, href)}
+              class="nav-link"
+              aria-current={isActive(href) ? "page" : undefined}
+            >
               {label}
             </a>
           ))
         }
       </nav>
-      <ThemeToggle />
+      <LangSwitch lang={lang} href={switchHref} />
+      <ThemeToggle lang={lang} />
     </div>
   </div>
 </header>

@@ -1,19 +1,40 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { withBase } from "@/lib/site";
+import { localeHref } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+// GitHub Pages serves this one file for every missing path, whatever the
+// language of the URL that failed — so it is the single bilingual page on the
+// site: English chrome, and the same message repeated in Spanish below.
+// altHref is null: a 404 has no translated counterpart to point search
+// engines at.
+const en = t("en");
+const es = t("es");
 ---
 
-<Base title="Not found">
+<Base lang="en" title={en.notFound.title} altHref={null} switchHref={localeHref("es", "/")}>
   <section class="hero wrap">
     <p class="eyebrow">
       <span class="eyebrow-mark" aria-hidden="true">§ 404</span>
-      Not found
+      {en.notFound.eyebrow}
     </p>
-    <h1 class="display page-title">This page doesn't exist.</h1>
-    <p class="lede hero-tagline">The link may be old, or the page may have moved.</p>
+    <h1 class="display page-title">{en.notFound.h1}</h1>
+    <p class="lede hero-tagline">{en.notFound.lede}</p>
     <div class="cta-actions">
-      <a class="btn btn-primary" href={withBase("/")}>Back to home</a>
-      <a class="btn" href={withBase("/projects/")}>Browse projects</a>
+      <a class="btn btn-primary" href={localeHref("en", "/")}>{en.notFound.home}</a>
+      <a class="btn" href={localeHref("en", "/projects/")}>{en.notFound.projects}</a>
+    </div>
+  </section>
+
+  <section class="section wrap" lang="es" aria-label={es.notFound.title}>
+    <p class="eyebrow">
+      <span class="eyebrow-mark" aria-hidden="true">§ 404</span>
+      {es.notFound.eyebrow}
+    </p>
+    <p class="lede hero-tagline">{es.notFound.h1} {es.notFound.lede}</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href={localeHref("es", "/")}>{es.notFound.home}</a>
+      <a class="btn" href={localeHref("es", "/projects/")}>{es.notFound.projects}</a>
     </div>
   </section>
 </Base>

@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { describe, expect, it } from "vitest";
 import { formatDate, readingTime } from "./format";
+import { locales } from "./i18n";
 import { postSchema, projectSchema } from "./schema";
 
 const validProject = {
@@ -81,6 +82,17 @@ describe("formatDate", () => {
     expect(formatDate("2026-07-01")).toBe("Jul 1, 2026");
   });
 
+  it("defaults to English and follows the requested language otherwise", () => {
+    expect(formatDate("2026-07-01")).toBe(formatDate("2026-07-01", "en"));
+    // Not asserting the exact Spanish string: ICU spells the month
+    // differently across Node versions ("jul" vs "jul."). What matters is
+    // that it is localized and still carries day and year.
+    const es = formatDate("2026-07-01", "es");
+    expect(es).not.toBe(formatDate("2026-07-01", "en"));
+    expect(es).toMatch(/1/);
+    expect(es).toMatch(/2026/);
+  });
+
   it("throws on non-ISO input instead of rendering 'Invalid Date'", () => {
     expect(() => formatDate("not-a-date")).toThrow(/YYYY-MM-DD/);
   });
@@ -92,15 +104,23 @@ describe("formatDate", () => {
 describe("real content in content/", () => {
   const contentDir = path.join(process.cwd(), "content");
 
+  /** Entries live one language directory deep: content/blog/en/<slug>.md.
+   * `slug` here is the collection entry id, language prefix included. */
   function readCollection(dir: string) {
     const abs = path.join(contentDir, dir);
     return fs
-      .readdirSync(abs)
-      .filter((f) => /\.mdx?$/.test(f) && !f.startsWith("_"))
-      .map((f) => ({
-        slug: f.replace(/\.mdx?$/, ""),
-        ...matter(fs.readFileSync(path.join(abs, f), "utf8")),
-      }));
+      .readdirSync(abs, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"))
+      .flatMap((langDir) =>
+        fs
+          .readdirSync(path.join(abs, langDir.name))
+          .filter((f) => /\.mdx?$/.test(f) && !f.startsWith("_"))
+          .map((f) => ({
+            lang: langDir.name,
+            slug: `${langDir.name}/${f.replace(/\.mdx?$/, "")}`,
+            ...matter(fs.readFileSync(path.join(abs, langDir.name, f), "utf8")),
+          }))
+      );
   }
 
   it("every project file passes the schema", () => {
@@ -114,6 +134,13 @@ describe("real content in content/", () => {
     for (const file of readCollection("blog")) {
       const result = postSchema.safeParse(file.data);
       expect(result.success, `content/blog/${file.slug}.md: ${JSON.stringify(result.success ? "" : result.error.issues)}`).toBe(true);
+    }
+  });
+
+  it("every entry lives under a configured language directory", () => {
+    const known = new Set<string>(locales);
+    for (const file of [...readCollection("projects"), ...readCollection("blog")]) {
+      expect(known.has(file.lang), `"${file.slug}" is not under ${[...known].join("/")}`).toBe(true);
     }
   });
 

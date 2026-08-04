@@ -1,0 +1,42 @@
+---
+import WorkRow from "@/components/WorkRow.astro";
+import Base from "@/layouts/Base.astro";
+import { listProjects } from "@/lib/content";
+import type { Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
+const projects = await listProjects(lang);
+---
+
+<Base lang={lang} title={s.projects.title} description={s.projects.description}>
+  <header class="article-header wrap">
+    <p class="eyebrow rise">
+      <span class="eyebrow-mark" aria-hidden="true">§</span>
+      {s.projects.title}
+    </p>
+    <h1 class="display rise rise-2">{s.projects.h1}</h1>
+    <p class="lede hero-tagline rise rise-3">{s.projects.lede}</p>
+  </header>
+
+  <section class="section wrap" aria-label={s.projects.listLabel}>
+    <div class="reveal">
+      {
+        projects.length > 0 ? (
+          <ol class="work-index">
+            {projects.map((row, i) => (
+              <WorkRow row={row} index={i} lang={lang} headingLevel="h2" />
+            ))}
+          </ol>
+        ) : (
+          <p class="lede">{s.projects.empty}</p>
+        )
+      }
+    </div>
+  </section>
+</Base>

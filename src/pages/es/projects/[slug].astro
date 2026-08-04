@@ -2,9 +2,9 @@
 import ProjectPage from "@/components/pages/ProjectPage.astro";
 import { entrySlug, getProjects } from "@/lib/content";
 
-// English case studies only — see the note in src/pages/blog/[slug].astro.
+// Spanish case studies only — content/projects/es/.
 export async function getStaticPaths() {
-  const projects = await getProjects("en");
+  const projects = await getProjects("es");
   return projects.map((project) => ({
     params: { slug: entrySlug(project.id) },
     props: { project },
@@ -14,4 +14,4 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 ---
 
-<ProjectPage project={project} lang="en" />
+<ProjectPage project={project} lang="es" />

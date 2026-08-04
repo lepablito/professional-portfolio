@@ -1,0 +1,79 @@
+---
+import { render } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import { counterpartHref, entryLang, entrySlug, type Post } from "@/lib/content";
+import { formatDate, readingTime } from "@/lib/format";
+import { localeHref, otherLang, type Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  post: Post;
+  lang: Lang;
+}
+
+const { post, lang } = Astro.props;
+const { data } = post;
+const s = t(lang);
+const minutes = readingTime(post.body ?? "");
+const { Content } = await render(post);
+
+// An untranslated post has no counterpart URL: no hreflang pair, and the
+// language chip goes to that language's blog index rather than a dead link.
+const altHref = await counterpartHref("blog", entrySlug(post.id), lang);
+const switchHref = altHref ?? localeHref(otherLang(lang), "/blog/");
+---
+
+<Base
+  lang={lang}
+  title={data.title}
+  description={data.description}
+  ogType="article"
+  publishedTime={data.date}
+  altHref={altHref}
+  switchHref={switchHref}
+>
+  <article>
+    <header class="article-header wrap">
+      <a class="link-more" href={localeHref(lang, "/blog/")}>{s.blog.back}</a>
+      <p class="eyebrow article-eyebrow">
+        <span class="eyebrow-mark" aria-hidden="true">§</span>
+        {s.blog.eyebrow}
+      </p>
+      <h1 class="display article-title">{data.title}</h1>
+      <div class="article-meta">
+        <time class="mono" datetime={data.date}>{formatDate(data.date, lang)}</time>
+        <span class="mono">{minutes} {s.common.minRead}</span>
+        <ul class="tag-row" aria-label={s.a11y.tags}>
+          {data.tags.map((tag) => <li class="tag">{tag}</li>)}
+        </ul>
+      </div>
+      {
+        data.relatedProject && (
+          <div class="article-links">
+            {/* Linked in the language the referenced case study is written
+                in — a Spanish post may point at an English-only project. */}
+            <a
+              class="link-more"
+              href={localeHref(entryLang(data.relatedProject.id), `/projects/${entrySlug(data.relatedProject.id)}/`)}
+            >
+              {s.blog.relatedProject}
+            </a>
+          </div>
+        )
+      }
+    </header>
+
+    <div class="wrap">
+      {
+        data.example && (
+          <p class="example-note">
+            <strong>{s.common.exampleNoteLead}</strong> {s.blog.exampleNote}
+          </p>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>

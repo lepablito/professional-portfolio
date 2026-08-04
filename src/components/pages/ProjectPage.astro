@@ -1,0 +1,90 @@
+---
+import { render } from "astro:content";
+import ExternalLink from "@/components/ExternalLink.astro";
+import Base from "@/layouts/Base.astro";
+import { counterpartHref, entryLang, entrySlug, type Project } from "@/lib/content";
+import { formatDate } from "@/lib/format";
+import { localeHref, otherLang, type Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  project: Project;
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const { data } = project;
+const s = t(lang);
+const { Content } = await render(project);
+
+// An untranslated case study has no counterpart URL: no hreflang pair, and
+// the language chip goes to that language's project index.
+const altHref = await counterpartHref("projects", entrySlug(project.id), lang);
+const switchHref = altHref ?? localeHref(otherLang(lang), "/projects/");
+---
+
+<Base
+  lang={lang}
+  title={data.title}
+  description={data.summary}
+  ogType="article"
+  publishedTime={data.date}
+  altHref={altHref}
+  switchHref={switchHref}
+>
+  <article>
+    <header class="article-header wrap">
+      <a class="link-more" href={localeHref(lang, "/projects/")}>{s.projects.back}</a>
+      <p class="eyebrow article-eyebrow">
+        <span class="eyebrow-mark" aria-hidden="true">fig.</span>
+        {s.projects.eyebrow}
+      </p>
+      <h1 class="display article-title">{data.title}</h1>
+      <p class="lede hero-tagline">{data.summary}</p>
+      <div class="article-meta">
+        <time class="mono" datetime={data.date}>{formatDate(data.date, lang)}</time>
+        <ul class="tag-row" aria-label={s.a11y.techStack}>
+          {data.stack.map((tech) => <li class="tag">{tech}</li>)}
+        </ul>
+      </div>
+      {
+        (data.demo || data.repo || data.blogPost) && (
+          <div class="article-links">
+            {data.demo && (
+              <ExternalLink class="link-ext" lang={lang} href={data.demo}>
+                {s.common.liveDemo}
+              </ExternalLink>
+            )}
+            {data.repo && (
+              <ExternalLink class="link-ext" lang={lang} href={data.repo}>
+                {s.common.sourceCode}
+              </ExternalLink>
+            )}
+            {data.blogPost && (
+              /* Linked in the language the referenced post is written in. */
+              <a
+                class="link-more"
+                href={localeHref(entryLang(data.blogPost.id), `/blog/${entrySlug(data.blogPost.id)}/`)}
+              >
+                {s.projects.relatedPost}
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="wrap">
+      {
+        data.example && (
+          <p class="example-note">
+            <strong>{s.common.exampleNoteLead}</strong> {s.projects.exampleNote}
+          </p>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>

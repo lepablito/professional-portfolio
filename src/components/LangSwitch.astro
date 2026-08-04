@@ -1,0 +1,33 @@
+---
+// EN / ES chip pair. Plain links, no client JS: the URL is the single source
+// of truth for the language, so a shared link always opens in the language it
+// was written in. `href` is computed at build time by the page (Base.astro's
+// `switchHref`), which is also what feeds the hreflang pair.
+import { locales, otherLang, type Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+  href: string;
+}
+
+const { lang, href } = Astro.props;
+const other = otherLang(lang);
+const label = (code: Lang) => code.toUpperCase();
+---
+
+<nav class="lang-switch" aria-label={t(lang).a11y.languageNav}>
+  {
+    locales.map((code) =>
+      code === lang ? (
+        <span class="lang-chip" aria-current="true">
+          {label(code)}
+        </span>
+      ) : (
+        <a class="lang-chip" href={href} hreflang={other} lang={other}>
+          {label(code)}
+        </a>
+      )
+    )
+  }
+</nav>

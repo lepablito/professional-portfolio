@@ -1,8 +1,10 @@
 ---
 import "@fontsource-variable/fraunces/opsz.css";
-// latin-only subsets: the site copy is English, so the full builds (latin-ext,
-// cyrillic, greek, vietnamese) would only add dead @font-face declarations.
-// Fraunces Variable has no per-subset CSS in Fontsource — opsz.css stays.
+// latin-only subsets: the site is English + Spanish, both fully covered by
+// the latin subset (á é í ó ú ü ñ ¿ ¡ included), so the remaining builds
+// (latin-ext, cyrillic, greek, vietnamese) would only add dead @font-face
+// declarations. Fraunces Variable has no per-subset CSS in Fontsource —
+// opsz.css stays.
 import "@fontsource/ibm-plex-sans/latin-400.css";
 import "@fontsource/ibm-plex-sans/latin-500.css";
 import "@fontsource/ibm-plex-sans/latin-600.css";
@@ -14,32 +16,60 @@ import "@/styles/global.css";
 import frauncesWoff2 from "@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
+import { alternateHref, defaultLocale, localeHref, ogLocale, otherLang, type Lang } from "@/lib/i18n";
 import { site, withBase } from "@/lib/site";
+import { t } from "@/lib/strings";
 
 interface Props {
   title?: string;
   description?: string;
   ogType?: "website" | "article";
   publishedTime?: string;
+  lang?: Lang;
+  /** Same page in the other language. `null` means there is none (an
+   * untranslated article) — no hreflang pair is emitted. Omitted = derive it
+   * from the URL, which is right for every page that exists in both. */
+  altHref?: string | null;
+  /** Where the language chip goes. Defaults to `altHref`; a page with no
+   * counterpart passes its section index so the chip is never a dead end. */
+  switchHref?: string;
 }
 
 const {
   title,
-  description = site.tagline,
   ogType = "website",
   publishedTime,
+  lang = defaultLocale,
+  altHref = alternateHref(Astro.url.pathname),
 } = Astro.props;
 
-const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — Applied AI Engineer`;
+const switchHref = Astro.props.switchHref ?? altHref ?? localeHref(otherLang(lang), "/");
+
+const s = t(lang);
+const description = Astro.props.description ?? s.meta.description;
+
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${s.meta.role}`;
 // Derived from site.url so a domain move only touches astro.config.mjs and
 // src/lib/site.ts — no hardcoded origin here.
-const canonical = `${new URL(site.url).origin}${Astro.url.pathname}`;
+const origin = new URL(site.url).origin;
+const canonical = `${origin}${Astro.url.pathname}`;
 // Social preview card — regenerate with `node scripts/generate-og.mjs`.
-const ogImage = `${new URL(site.url).origin}${withBase("/og.png")}`;
+const ogImage = `${origin}${withBase("/og.png")}`;
+
+// hreflang only when the counterpart page actually exists, so search engines
+// are never pointed at a 404. x-default goes to the English version.
+const alternates =
+  altHref === null
+    ? []
+    : [
+        { hreflang: lang, href: canonical },
+        { hreflang: otherLang(lang), href: `${origin}${altHref}` },
+        { hreflang: "x-default", href: lang === defaultLocale ? canonical : `${origin}${altHref}` },
+      ];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -53,6 +83,7 @@ const ogImage = `${new URL(site.url).origin}${withBase("/og.png")}`;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
     {/* Fraunces paints the display h1 (the LCP text) — start fetching it
         before the CSS bundle finishes parsing. */}
     <link rel="preload" href={frauncesWoff2} as="font" type="font/woff2" crossorigin />
@@ -62,12 +93,17 @@ const ogImage = `${new URL(site.url).origin}${withBase("/og.png")}`;
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    {
+      altHref !== null && (
+        <meta property="og:locale:alternate" content={ogLocale[otherLang(lang)]} />
+      )
+    }
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name} — Applied AI Engineer`} />
+    <meta property="og:image:alt" content={`${site.name} — ${s.meta.role}`} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
@@ -78,12 +114,12 @@ const ogImage = `${new URL(site.url).origin}${withBase("/og.png")}`;
     />
   </head>
   <body>
-    <a href="#main" class="skip-link">Skip to content</a>
-    <Header />
+    <a href="#main" class="skip-link">{s.a11y.skipToContent}</a>
+    <Header lang={lang} switchHref={switchHref} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
     <script>
       // Scroll reveal (fade + 12px slide). The hidden initial state only
       // applies when <html> has the "js" class, and a CSS safety animation

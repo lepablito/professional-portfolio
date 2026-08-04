@@ -1,0 +1,149 @@
+---
+import ExternalLink from "@/components/ExternalLink.astro";
+import FactList from "@/components/FactList.astro";
+import TimelineItem from "@/components/TimelineItem.astro";
+import Base from "@/layouts/Base.astro";
+import { aboutData, skillGroups } from "@/lib/about-data";
+import type { Lang } from "@/lib/i18n";
+import { asset, site } from "@/lib/site";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
+const { experience, community, education, certifications, languages } = aboutData[lang];
+---
+
+<Base lang={lang} title={s.about.title} description={s.about.description}>
+  <header class="article-header wrap">
+    <p class="eyebrow rise">
+      <span class="eyebrow-mark" aria-hidden="true">§</span>
+      {s.about.eyebrow}
+    </p>
+    <h1 class="display rise rise-2">{s.about.h1}</h1>
+  </header>
+
+  <section class="section wrap" aria-label={s.a11y.bio}>
+    <div class="reveal">
+      <div class="about-grid">
+        <div>
+          <p class="lede">{s.about.p1}</p>
+          <p class="lede">{s.about.p2}</p>
+          <p class="lede">{s.about.p3}</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href={asset(site.cvPath[lang])} download>{s.common.downloadCv}</a>
+            <ExternalLink class="btn" lang={lang} href={site.linkedin}>LinkedIn ↗</ExternalLink>
+          </div>
+        </div>
+        <div class="portrait-frame">
+          {/* Square source cropped to the 4:5 frame via object-fit: cover.
+              To update, overwrite public/images/portrait.jpg (≥520px wide
+              renders sharp on retina; width/height match the source file). */}
+          <img
+            src={asset("/images/portrait.jpg")}
+            alt={s.a11y.portraitAlt}
+            width="400"
+            height="400"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="experience-heading">
+    <div class="reveal">
+      <div class="section-head">
+        <h2 id="experience-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 01</span>
+          {s.about.experienceHeading}
+        </h2>
+      </div>
+      <ol class="timeline">
+        {
+          experience.map((job) => (
+            <TimelineItem period={job.period} title={job.role} subtitle={job.org} description={job.description} />
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="community-heading">
+    <div class="reveal">
+      <div class="community-band">
+        <h2 id="community-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 02</span>
+          {s.about.communityHeading}
+        </h2>
+        <p class="display community-title">{s.about.communityTitle}</p>
+        <ul class="community-list">
+          {
+            community.map((entry) => (
+              <TimelineItem
+                variant="community"
+                period={entry.period}
+                title={entry.role}
+                subtitle={entry.detail}
+                description={entry.description}
+              />
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="skills-heading">
+    <div class="reveal">
+      <div class="section-head">
+        <h2 id="skills-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 03</span>
+          {s.about.skillsHeading}
+        </h2>
+      </div>
+      <div class="skills-grid">
+        {
+          skillGroups.map((group) => (
+            <div class="skills-group">
+              <h3>{s.skills[group.key]}</h3>
+              <ul class="tag-row">
+                {group.items.map((item) => (
+                  <li class="tag">{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="background-heading">
+    <div class="reveal">
+      <div class="section-head">
+        <h2 id="background-heading" class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true">§ 04</span>
+          {s.about.backgroundHeading}
+        </h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skills-group">
+          <h3>{s.about.educationHeading}</h3>
+          <FactList facts={education} />
+        </div>
+        <div class="skills-group">
+          <h3>{s.about.certificationsHeading}</h3>
+          <FactList facts={certifications} />
+        </div>
+        <div class="skills-group">
+          <h3>{s.about.languagesHeading}</h3>
+          <FactList facts={languages} />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -2,11 +2,10 @@
 import BlogPostPage from "@/components/pages/BlogPostPage.astro";
 import { entrySlug, getPosts } from "@/lib/content";
 
-// English posts only. A post with no Spanish translation therefore never
-// gets an /es/blog/ URL — the Spanish listing links to this page instead,
-// marked "EN". Same shape in src/pages/es/blog/[slug].astro.
+// Spanish posts only — content/blog/es/. Nothing is generated for posts that
+// have not been translated yet.
 export async function getStaticPaths() {
-  const posts = await getPosts("en");
+  const posts = await getPosts("es");
   return posts.map((post) => ({
     params: { slug: entrySlug(post.id) },
     props: { post },
@@ -16,4 +15,4 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 ---
 
-<BlogPostPage post={post} lang="en" />
+<BlogPostPage post={post} lang="es" />

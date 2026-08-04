@@ -3,9 +3,17 @@
 // script right after the button syncs aria-pressed with the theme the head
 // script already resolved (so AT never reads a stale "false" while the
 // deferred module below loads), and the module owns the toggle behavior.
+import type { Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
 ---
 
-<button type="button" class="theme-toggle" aria-pressed="false" aria-label="Dark theme">
+<button type="button" class="theme-toggle" aria-pressed="false" aria-label={t(lang).a11y.themeToggle}>
   <svg
     class="icon-moon"
     width="16"

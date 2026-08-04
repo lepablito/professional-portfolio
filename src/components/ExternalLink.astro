@@ -2,14 +2,18 @@
 // Single place that owns target="_blank" + rel, so a new external link
 // can't forget the noopener/noreferrer pair (reverse-tabnabbing guard)
 // or the screen-reader notice that a new tab opens (WCAG 3.2.5).
+import { defaultLocale, type Lang } from "@/lib/i18n";
+import { t } from "@/lib/strings";
+
 interface Props {
   href: string;
   class?: string;
+  lang?: Lang;
 }
 
-const { href, class: className } = Astro.props;
+const { href, class: className, lang = defaultLocale } = Astro.props;
 ---
 
 <a href={href} class={className} target="_blank" rel="noopener noreferrer"
-  ><slot /><span class="sr-only"> (opens in new tab)</span></a
+  ><slot /><span class="sr-only">{t(lang).a11y.newTab}</span></a
 >

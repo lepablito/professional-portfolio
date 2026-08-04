@@ -45,24 +45,58 @@ the build (and `npm test`) naming the file and field.
 
 | What | Where | Template |
 | ---- | ----- | -------- |
-| Project case study | `content/projects/<slug>.md` | `content/projects/_TEMPLATE.md` |
-| Blog post | `content/blog/<slug>.md` | `content/blog/_TEMPLATE.md` |
+| Project case study | `content/projects/<lang>/<slug>.md` | `content/projects/_TEMPLATE.md` |
+| Blog post | `content/blog/<lang>/<slug>.md` | `content/blog/_TEMPLATE.md` |
+
+`<lang>` is `en` or `es`. Using the **same `<slug>` in both** is what marks two
+files as translations of each other.
 
 Notes:
 
 - Files starting with `_` are ignored by the site.
+- Cross-links between collections carry the language directory:
+  `blogPost: "en/some-post"`.
 - `draft: true` hides an entry; `featured: true` puts a project on the home page (max 6).
 - `example: true` shows a visible "example content" notice — the two shipped
   projects and one post use it. Replace them with real case studies and delete the flag.
 - Case studies follow a fixed structure: Problem → Architecture → Decisions &
   trade-offs → Metrics → Lessons learned → Links.
 
+## Languages
+
+The site is bilingual: **English is the default and lives at the root**
+(`/about/`), Spanish lives under a prefix (`/es/about/`). The URL is the only
+source of truth — there is no auto-detection and no client JS, so a shared link
+always opens in the language it was written in.
+
+- **UI and page copy**: `src/lib/strings.ts`, one object per language. The
+  Spanish object is typed against the English one, so a missing key fails
+  `npm run typecheck`, and `npm test` catches empty or untranslated values.
+- **Bio data** (experience, education, …): `src/lib/about-data.ts`, one entry
+  per language. Skill *items* are shared — only the group label is translated.
+- **Internal links**: use `localeHref(lang, "/about/")` from `src/lib/i18n.ts`
+  (it wraps `withBase`). `npm run check-links` fails the build if one slips.
+- **Page bodies** live in `src/components/pages/`; the files under
+  `src/pages/` and `src/pages/es/` are three-line route shims.
+
+Translating an article is just adding the file — no code changes. Until then,
+the English original is listed on the Spanish pages with an `EN` chip that
+links to its English URL, and no Spanish URL is generated for it (no duplicate
+content, no `hreflang` pointing at a page that does not exist).
+
 ## Assets to replace
 
-- **CV**: `public/cv.pdf` (linked from the home CTA, About and the footer).
-  Overwrite that file to update it.
+- **CV**: `public/cv.pdf` (English) and `public/cv-es.pdf` (Spanish), linked
+  from the home CTA, About and the footer in the matching language.
+  `node scripts/generate-cv.mjs` rewrites the Spanish one (`… en` the English
+  one, `… all` both) from the template and content in that script — edit the
+  content there, not the PDF. Overwriting the PDFs by hand also works.
+  The template reconstructs the original Word layout (A4, Calibri, `#1F3864`
+  headings); it needs Calibri installed to break lines identically, and the
+  PDFs are committed so builds never run it.
 - **Portrait**: `public/images/portrait.jpg` — overwrite that file to update
-  it. Shown in a 4:5 frame at 260px wide (`src/pages/about.astro`); any aspect
+  it. Shown in a 4:5 frame at 260px wide
+  (`src/components/pages/AboutPage.astro`); any aspect
   ratio works (`object-fit: cover` crops it), ≥520px wide renders sharp on
   retina screens. If the source dimensions change, update the `width`/`height`
   attributes on the `<img>`.

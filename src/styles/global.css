@@ -312,6 +312,41 @@ h1.display {
   border-bottom-color: var(--accent);
 }
 
+/* Language pair: a two-cell title block, the same square mono vocabulary as
+   the spec tables. Plain links — the URL owns the language, there is no JS. */
+.lang-switch {
+  display: flex;
+  border: 1px solid var(--muted);
+  block-size: 2.75rem;
+}
+
+.lang-chip {
+  display: grid;
+  place-items: center;
+  min-inline-size: 2.25rem;
+  padding-inline: 0.45rem;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.lang-chip + .lang-chip {
+  border-inline-start: 1px solid var(--muted);
+}
+
+.lang-chip[aria-current="true"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+a.lang-chip:hover {
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+
 /* 44px minimum touch target (WCAG 2.5.5); border uses --muted so the
    control boundary meets the 3:1 non-text contrast minimum (WCAG 1.4.11). */
 .theme-toggle {
@@ -627,6 +662,18 @@ h1.display {
 .link-ext:hover,
 .link-more:hover {
   text-decoration: underline;
+}
+
+/* Marks an entry listed in Spanish that only exists in English — the row
+   links straight to the English page. */
+.lang-badge {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  color: var(--muted);
+  border: 1px solid var(--muted);
+  padding: 0.15rem 0.55rem;
+  white-space: nowrap;
 }
 
 /* example-content notice */

@@ -1,5 +1,6 @@
 ---
-# Copy this file to content/projects/<slug>.md and fill it in.
+# Copy this file to content/projects/<lang>/<slug>.md and fill it in
+# (lang is "en" or "es"; the same <slug> in both links the two versions).
 # Files starting with "_" are ignored by the site.
 title: "Project title"
 summary: "One sentence: the problem this project solves and for whom."
@@ -7,7 +8,7 @@ stack: ["Python", "LangChain", "Vertex AI", "Docker"]
 date: "2026-01-01"
 # demo: "https://demo-url"
 # repo: "https://github.com/lepablito/repo"
-# blogPost: "related-post-slug"
+# blogPost: "en/related-post-slug"   # id includes the language directory
 featured: false
 # order: 1
 draft: true
