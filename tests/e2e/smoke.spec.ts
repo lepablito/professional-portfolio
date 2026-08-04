@@ -45,18 +45,35 @@ test("the language chip keeps the visitor on the same page", async ({ page }) =>
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 
-test("untranslated posts are listed in Spanish but link to the English page", async ({ page }) => {
-  await page.goto("es/blog/");
-  const row = page.locator(".post-row").first();
-  await expect(row.locator(".lang-badge")).toHaveText(/EN/);
-  await expect(row.locator(".post-row-title a")).toHaveAttribute(
+// Every article is currently translated, so the Spanish listings should carry
+// no "EN" fallback chips and every row should stay inside /es/. The fallback
+// path itself (chip + link to the English URL) kicks in automatically for any
+// article added to content/<collection>/en/ without a Spanish sibling.
+for (const [path, row] of [
+  ["es/blog/", ".post-row"],
+  ["es/projects/", ".work-row"],
+]) {
+  test(`Spanish listing at /${path} is fully translated`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator(`${row} .lang-badge`)).toHaveCount(0);
+    for (const href of await page.locator(`${row} a[href*="/professional-portfolio/"]`).evaluateAll(
+      (links) => links.map((a) => a.getAttribute("href") ?? "")
+    )) {
+      expect(href, `${href} escapes /es/`).toContain("/professional-portfolio/es/");
+    }
+  });
+}
+
+test("an article and its translation point at each other", async ({ page }) => {
+  await page.goto("projects/llm-energy-benchmark/");
+  await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute(
     "href",
-    /professional-portfolio\/blog\//
+    /\/es\/projects\/llm-energy-benchmark\/$/
   );
-  // No Spanish URL is generated for it, so nothing points search engines at
-  // a page that does not exist.
-  await row.locator(".post-row-title a").click();
-  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await page.locator('.lang-chip[hreflang="es"]').click();
+  await expect(page).toHaveURL(/\/es\/projects\/llm-energy-benchmark\/$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+  await expect(page.locator("h1")).toContainText("Arquitectura multiagente");
 });
 
 test("theme toggle flips the theme and its aria-pressed state", async ({ page }) => {
@@ -94,6 +111,9 @@ for (const path of [
   "es/projects/",
   "es/blog/",
   "es/about/",
+  "es/projects/llm-energy-benchmark/",
+  "es/projects/certification-exam-simulator/",
+  "es/blog/claude-code-on-other-models/",
 ]) {
   test(`no serious/critical axe violations on /${path}`, async ({ page }) => {
     // The site honors prefers-reduced-motion (entrance animations off).
