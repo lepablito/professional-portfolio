@@ -3,7 +3,6 @@ title: "One passage, one yes/no question"
 description: "I put two decision models, Jev and Laya, up against the LLM reranker of my D&D wiki. Jev, reading full passages, found the right source for all 36 questions. Laya without fine-tuning did worse than not reranking at all."
 date: "2026-09-27"
 tags: ["rag", "reranking", "llm-local", "ollama"]
-draft: true
 ---
 
 The [previous post](/blog/rag-wiki-dnd/) ended with a diagnosis: the Oracle

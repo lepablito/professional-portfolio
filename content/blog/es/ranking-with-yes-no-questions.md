@@ -3,7 +3,6 @@ title: "Un pasaje, una pregunta de sí o no"
 description: "Enfrenté dos modelos de decisión, Jev y Laya, al reranker LLM de mi wiki de D&D. Jev, leyendo los pasajes enteros, encontró la fuente correcta en las 36 preguntas. Laya sin afinar lo hizo peor que no reordenar nada."
 date: "2026-09-27"
 tags: ["rag", "reranking", "llm-local", "ollama"]
-draft: true
 ---
 
 El [post anterior](/es/blog/rag-wiki-dnd/) terminaba con un diagnóstico: el
